@@ -69,6 +69,7 @@ function App() {
     return id ? Number(id) : null;
   });
   const [characters, setCharacters] = useState([]);
+  const [loading, setLoading]       = useState(false);
 
   const navigate = (newView, newId = selectedId) => {
     setView(newView);
@@ -81,12 +82,14 @@ function App() {
   useEffect(() => { if (token) fetchCharacters(); }, [token]);
 
   const fetchCharacters = async () => {
+    setLoading(true);
     try {
       const res = await fetch('/api/characters', {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (res.ok) setCharacters(await res.json());
     } catch (e) { console.error(e); }
+    finally { setLoading(false); }
   };
 
   const handleLogout = () => {
@@ -99,6 +102,7 @@ function App() {
   };
 
   const handleSave = async (formData) => {
+    setLoading(true);
     const name    = formData.perfil?.nombre || formData.perfil?.alias || 'SUJETO_SIN_IDENTIFICAR';
     const payload = { name, data: formData };
     try {
@@ -125,16 +129,23 @@ function App() {
     } catch (e) {
       console.error(e);
       return false;
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleDelete = async (id) => {
     if (!confirm('¿Eliminar este personaje?')) return;
-    await fetch(`/api/characters/${id}`, {
-      method: 'DELETE',
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    await fetchCharacters();
+    setLoading(true);
+    try {
+      await fetch(`/api/characters/${id}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      await fetchCharacters();
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (!token) return <Login onLogin={setToken} />;
@@ -164,20 +175,18 @@ function App() {
 
   // ── LIST VIEW ──────────────────────────────────────────────────
   return (
-    <div className="hud-shell">
-      {/* Dos líneas de scan en direcciones opuestas */}
-      <div className="scan-line scan-line--primary" />
-      <div className="scan-line scan-line--secondary" />
-
-      <header className="hud-header no-print">
+    <div className={`hud-shell ${loading ? 'hud-shell--loading' : ''}`}>
+      {/* Global Loading Bar */}
+      <div className="net-progress-bar" style={{ opacity: loading ? 1 : 0 }} />
+      <header className="hud-header no-print" style={{ animation: 'fade-in 0.8s ease' }}>
         <div
-          className="hud-title hud-title--glitch"
-          data-text="THE DEVIANT'S CHRONICLE"
+          className="hud-title"
+          style={{ animation: 'glitch-soft 10s infinite' }}
         >
-          THE DEVIANT'S CHRONICLE
+          CRÓNICA_OS v3.0 // SENTINEL
         </div>
-        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-          <span className="status-badge">ENLAZADO</span>
+        <div style={{ display: 'flex', gap: '1.2rem', alignItems: 'center' }}>
+          <span className="status-badge">ENLACE_ESTABLE</span>
           <button className="cyber-button cyber-button--magenta" onClick={handleLogout}>
             DESCONECTAR
           </button>
@@ -186,62 +195,63 @@ function App() {
 
       <div className="home-layout">
         {/* ── Sidebar ─── */}
-        <aside className="home-sidebar">
-          <div className="hud-label hud-label--cyan hud-label--lg" style={{ marginBottom: '0.8rem' }}>
+        <aside className="home-sidebar" style={{ animation: 'slide-in-left 0.5s ease both' }}>
+          <div className="hud-label" style={{ marginBottom: '1rem', opacity: 0.8 }}>
             EXPEDIENTES_ACTIVOS
           </div>
 
-          {characters.length === 0 ? (
-            <div style={{
-              color: 'var(--text-dimmer)',
-              fontSize: '0.72rem',
-              padding: '1.2rem',
-              border: '1px dashed rgba(0,243,255,0.1)',
-              textAlign: 'center',
-              fontFamily: 'var(--font-mono)',
-              letterSpacing: '1px',
-              animation: 'fade-up 0.4s ease both',
-            }}>
-              // NO_PERFILES_DETECTADOS
-            </div>
-          ) : (
-            characters.map((char, i) => (
-              <div
-                key={char.id}
-                className="char-card"
-                style={{ animationDelay: `${i * 80}ms` }}
-                onClick={() => navigate('view', char.id)}
-              >
-                <div className="char-card__name">{char.name}</div>
-                <div className="char-card__id">
-                  SID:{String(char.id).padStart(4, '0')} · {char.updated_at?.slice(0, 10)}
-                </div>
+          <div className="char-list-scroll">
+            {characters.length === 0 ? (
+              <div style={{
+                color: 'var(--text-dimmer)',
+                fontSize: '0.75rem',
+                padding: '2rem',
+                border: '1px dashed var(--glass-border)',
+                borderRadius: 'var(--radius-md)',
+                textAlign: 'center',
+                fontFamily: 'var(--font-mono)',
+              }}>
+                // SIN_REGISTROS
               </div>
-            ))
-          )}
+            ) : (
+              characters.map((char, i) => (
+                <div
+                  key={char.id}
+                  className="char-card"
+                  style={{ animationDelay: `${i * 50}ms`, animation: 'fade-up 0.4s ease both' }}
+                  onClick={() => navigate('view', char.id)}
+                >
+                  <div className="char-card__name">{char.name}</div>
+                  <div className="char-card__id">
+                    SID:{String(char.id).padStart(4, '0')} · {char.updated_at?.slice(0, 10)}
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
 
           <button
-            className="cyber-button cyber-button--green cyber-button--full"
-            style={{ marginTop: '1.2rem', animation: 'fade-up 0.4s ease both', animationDelay: `${characters.length * 80 + 100}ms` }}
+            className="cyber-button cyber-button--add cyber-button--add-green"
+            style={{ animation: 'fade-up 0.5s ease both', animationDelay: '0.3s' }}
             onClick={() => navigate('edit', null)}
           >
-            + NUEVO_SUJETO
+            + NUEVO_EXPEDIENTE
           </button>
         </aside>
 
         {/* ── Welcome panel ─── */}
-        <div className="home-welcome glass-panel">
+        <div className="home-welcome glass-panel" style={{ animation: 'fade-up 0.6s ease both', animationDelay: '0.1s' }}>
           <div style={{ position: 'relative', zIndex: 1 }}>
             {/* Watermark */}
             <div style={{
-              fontSize: 'clamp(3rem, 9vw, 6.5rem)',
-              color: 'rgba(0,243,255,0.03)',
+              fontSize: 'clamp(3rem, 10vw, 8rem)',
+              color: 'rgba(255,255,255,0.015)',
               fontFamily: 'var(--font-display)',
               fontWeight: 900,
-              letterSpacing: '10px',
+              letterSpacing: '20px',
               userSelect: 'none',
               lineHeight: 1,
-              animation: 'pulse-opacity 6s ease-in-out infinite',
+              marginBottom: '2rem'
             }}>
               SENTINEL
             </div>
@@ -251,55 +261,52 @@ function App() {
 
             {/* Data readout animado */}
             <div style={{
-              marginTop: '2rem',
+              marginTop: '3rem',
               display: 'flex',
               flexDirection: 'column',
-              gap: '0.5rem',
+              gap: '0.8rem',
               alignItems: 'center',
             }}>
-              <DataRow label="NODE"      value="STABLE"                  color="var(--neon-green)"   delay={200}  />
-              <DataRow label="PROTOCOL"  value="ACTIVE"                  color="var(--neon-cyan)"    delay={500}  />
-              <DataRow label="SUJETOS"   value={`${characters.length} EN REGISTRO`} color="var(--neon-amber)"   delay={800}  />
-              <DataRow label="CIPHER"    value="AES-256-GCM"             color="var(--text-dim)"     delay={1100} />
+              <DataRow label="ESTADO"      value="SISTEMA_OPERATIVO"       color="var(--neon-green)"   delay={400}  />
+              <DataRow label="NIVEL"       value="AUTORIZACIÓN_MÁXIMA"    color="var(--neon-cyan)"    delay={800}  />
+              <DataRow label="REGISTROS"   value={`${characters.length} ARCHIVOS_CARGADOS`} color="var(--neon-amber)"   delay={1200}  />
             </div>
 
             <div style={{
-              marginTop: '1.5rem',
-              width: '60px',
+              marginTop: '2rem',
               height: '1px',
-              background: 'linear-gradient(90deg, transparent, var(--neon-cyan), transparent)',
-              margin: '1.5rem auto 0',
-              opacity: 0.5,
-              animation: 'pulse-opacity 3s ease-in-out infinite',
+              background: 'linear-gradient(90deg, transparent, var(--glass-border), transparent)',
+              width: '100px',
+              margin: '2rem auto'
             }} />
 
             <div style={{
-              marginTop: '1rem',
               fontFamily: 'var(--font-mono)',
-              fontSize: '0.55rem',
+              fontSize: '0.6rem',
               color: 'var(--text-dimmer)',
-              letterSpacing: '2px',
+              letterSpacing: '4px',
+              opacity: 0.5
             }}>
-              SISTEMA_CRÓNICA v2.0.0 // 2026
+              SISTEMA_CRÓNICA // VER:3.0.0_STABLE // SECURE_ACCESS
             </div>
           </div>
         </div>
       </div>
 
       <footer className="no-print" style={{
-        padding: '0.6rem 1.5rem',
+        padding: '0.8rem 2rem',
         borderTop: '1px solid var(--glass-border)',
         display: 'flex',
         justifyContent: 'space-between',
-        background: 'rgba(3,5,10,0.7)',
-        animation: 'fade-in 0.6s ease both',
-        animationDelay: '0.4s',
+        background: 'rgba(5,8,15,0.8)',
+        backdropFilter: 'blur(10px)',
+        fontSize: '0.6rem',
+        fontFamily: 'var(--font-mono)',
+        color: 'var(--text-dimmer)'
       }}>
-        <span style={{ fontSize: '0.55rem', color: 'var(--text-dimmer)', fontFamily: 'var(--font-mono)' }}>
-          NODE_STATUS: STABLE
-        </span>
-        <span style={{ fontSize: '0.55rem', color: 'var(--text-dimmer)', fontFamily: 'var(--font-mono)' }}>
-          THE_DEVIANTS_CHRONICLE // <AnimatedCount value={characters.length} /> SUJETO{characters.length !== 1 ? 'S' : ''}_EN_REGISTRO
+        <span>CORE_STABILITY: 98.2%</span>
+        <span>
+          THE_DEVIANTS_CHRONICLE // <AnimatedCount value={characters.length} /> REGISTROS_DETECTADOS
         </span>
       </footer>
     </div>

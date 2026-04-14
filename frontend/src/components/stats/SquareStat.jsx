@@ -22,6 +22,30 @@ export default function SquareStat({
   value = 0, max = 10, rows = 1, markers = [],
   onChange, readOnly = false
 }) {
+  const [lastValue, setLastValue] = React.useState(value);
+  const [changedIdx, setChangedIdx] = React.useState(null);
+
+  React.useEffect(() => {
+    if (value !== lastValue) {
+      for (let i = 0; i < max; i++) {
+        if ((value & (1 << i)) !== (lastValue & (1 << i))) {
+          setChangedIdx(i);
+          break;
+        }
+      }
+      // También chequear markers (bits 10, 11, 12)
+      for (let i = 10; i <= 12; i++) {
+        if ((value & (1 << i)) !== (lastValue & (1 << i))) {
+          setChangedIdx(i);
+          break;
+        }
+      }
+      setLastValue(value);
+      const timer = setTimeout(() => setChangedIdx(null), 400);
+      return () => clearTimeout(timer);
+    }
+  }, [value, lastValue, max]);
+
   const perRow = Math.ceil(max / rows);
 
   const toggleBit = (idx) => {
@@ -59,7 +83,7 @@ export default function SquareStat({
               {hasMarker && (
                 <button
                   type="button"
-                  className={`square-stat__marker ${markerActive ? 'square-stat__marker--active' : ''}`}
+                  className={`square-stat__marker ${markerActive ? 'square-stat__marker--active' : ''} ${changedIdx === (10 + markerPos) ? 'just-changed' : ''}`}
                   onClick={() => toggleMarker(markerPos)}
                   title={`Crisis ${markers[markerPos]}`}
                 >
@@ -70,7 +94,7 @@ export default function SquareStat({
           )}
           <button
             type="button"
-            className={`square-stat__box ${filled ? 'square-stat__box--filled' : ''}`}
+            className={`square-stat__box ${filled ? 'square-stat__box--filled' : ''} ${changedIdx === i ? 'just-changed' : ''}`}
             onClick={() => toggleBit(i)}
           />
         </div>

@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { CLAN_MANIPULATIONS } from '../../data/manipulationsCatalog';
+
+const FACCIONES_VALIDAS = Object.keys(CLAN_MANIPULATIONS).filter(f => f !== 'PARTICULARES');
 
 /* ── Panel colapsable ────────────────────────────────────────── */
 function Section({ id, title, color = 'cyan', collapsed, onToggle, children }) {
@@ -78,6 +81,7 @@ export default function TabPerfil({ data, update }) {
   const estudiosCtrl = listField('estudios', perfil.estudios);
   const idiomasCtrl  = listField('idiomas',  perfil.idiomas);
   const hobbiesCtrl  = listField('hobbies',  perfil.hobbies);
+  const nacionalidadCtrl = listField('nacionalidad', perfil.nacionalidad);
 
   const totalIngresos = economia.registros.reduce((s, r) => s + (Number(r.ingreso) || 0), 0);
   const totalEgresos  = economia.registros.reduce((s, r) => s + (Number(r.egreso)  || 0), 0);
@@ -88,28 +92,27 @@ export default function TabPerfil({ data, update }) {
 
       {/* ── IDENTIFICACIÓN ─────────────────────────────────── */}
       <Section id="ident" title="[ IDENTIFICACIÓN ]" color="cyan" collapsed={collapsed.has('ident')} onToggle={toggle}>
-        <div className="form-section" style={{ gap: '1rem' }}>
-
-          {/* Nombre completo ocupa todo el ancho */}
-          <div className="field-group">
-            <label className="hud-label">NOMBRE_COMPLETO</label>
-            <input className="cyber-input" value={perfil.nombre}
-              onChange={e => update('perfil', 'nombre', e.target.value)} />
-          </div>
-
-          <div className="field-row field-row--2">
+        <div className="form-section">
+          {/* Fila 1: Datos de Registro Core */}
+          <div className="field-row field-row--3">
             <div className="field-group">
-              <label className="hud-label hud-label--magenta">ALIAS</label>
-              <input className="cyber-input cyber-input--magenta" value={perfil.alias}
+              <label className="hud-label">NOMBRE_COMPLETO</label>
+              <input className="cyber-input" value={perfil.nombre}
+                onChange={e => update('perfil', 'nombre', e.target.value)} />
+            </div>
+            <div className="field-group">
+              <label className="hud-label">ALIAS</label>
+              <input className="cyber-input" value={perfil.alias}
                 onChange={e => update('perfil', 'alias', e.target.value)} />
             </div>
             <div className="field-group">
-              <label className="hud-label hud-label--cyan">CLASE_CENTINELA</label>
+              <label className="hud-label">CLASE_CENTINELA</label>
               <input className="cyber-input" value={perfil.claseCentinela}
                 onChange={e => update('perfil', 'claseCentinela', e.target.value)} />
             </div>
           </div>
 
+          {/* Fila 2: Datos Temporales */}
           <div className="field-row field-row--3">
             <div className="field-group">
               <label className="hud-label">EDAD</label>
@@ -128,38 +131,75 @@ export default function TabPerfil({ data, update }) {
             </div>
           </div>
 
+          {/* Fila 3: Biometría */}
           <div className="field-row field-row--3">
-            {[['ESTATURA', 'estatura'], ['PESO', 'peso'], ['CONTEXTURA', 'contextura']].map(([l, k]) => (
-              <div key={k} className="field-group">
-                <label className="hud-label">{l}</label>
-                <input className="cyber-input" value={perfil[k]}
-                  onChange={e => update('perfil', k, e.target.value)} />
-              </div>
-            ))}
+            <div className="field-group">
+              <label className="hud-label">ESTATURA</label>
+              <input className="cyber-input" value={perfil.estatura}
+                onChange={e => update('perfil', 'estatura', e.target.value)} />
+            </div>
+            <div className="field-group">
+              <label className="hud-label">PESO</label>
+              <input className="cyber-input" value={perfil.peso}
+                onChange={e => update('perfil', 'peso', e.target.value)} />
+            </div>
+            <div className="field-group">
+              <label className="hud-label">CONTEXTURA</label>
+              <input className="cyber-input" value={perfil.contextura}
+                onChange={e => update('perfil', 'contextura', e.target.value)} />
+            </div>
           </div>
 
-          <div className="field-row field-row--4">
-            {[
-              ['NACIONALIDAD', 'nacionalidad'],
-              ['RESIDENCIA', 'residencia'],
-              ['ESTADO_CIVIL', 'estadoCivil'],
-              ['OFICIO', 'oficio'],
-            ].map(([l, k]) => (
-              <div key={k} className="field-group">
-                <label className="hud-label">{l}</label>
-                <input className="cyber-input" value={perfil[k]}
-                  onChange={e => update('perfil', k, e.target.value)} />
+          {/* Fila 4: Origen y Estatus (Multinacionalidad) */}
+          <div className="field-row field-row--2" style={{ alignItems: 'start' }}>
+            <div className="field-group">
+              <label className="hud-label">NACIONALIDAD_ES</label>
+              <div className="dynamic-list">
+                {perfil.nacionalidad.map((item, idx) => (
+                  <div key={idx} className="dynamic-list__item">
+                    <input className="cyber-input" value={item} 
+                      onChange={e => nacionalidadCtrl.onChange(idx, e.target.value)} />
+                    {perfil.nacionalidad.length > 1 ? (
+                      <button className="dynamic-list__remove" title="Eliminar" onClick={() => nacionalidadCtrl.onRemove(idx)}>×</button>
+                    ) : (
+                      <button className="cyber-button" style={{ padding: '0.6rem 1rem', flexShrink: 0 }} 
+                        onClick={nacionalidadCtrl.onAdd}>+ AGREGAR</button>
+                    )}
+                  </div>
+                ))}
+                {perfil.nacionalidad.length > 1 && (
+                  <button className="cyber-button cyber-button--add" onClick={nacionalidadCtrl.onAdd}>+ VINCULAR_OTRA_NACIONALIDAD</button>
+                )}
               </div>
-            ))}
+            </div>
+            <div className="form-section">
+              <div className="field-group">
+                <label className="hud-label">RESIDENCIA</label>
+                <input className="cyber-input" value={perfil.residencia}
+                  onChange={e => update('perfil', 'residencia', e.target.value)} />
+              </div>
+              <div className="field-row field-row--2">
+                <div className="field-group">
+                  <label className="hud-label">ESTADO_CIVIL</label>
+                  <input className="cyber-input" value={perfil.estadoCivil}
+                    onChange={e => update('perfil', 'estadoCivil', e.target.value)} />
+                </div>
+                <div className="field-group">
+                  <label className="hud-label">OFICIO</label>
+                  <input className="cyber-input" value={perfil.oficio}
+                    onChange={e => update('perfil', 'oficio', e.target.value)} />
+                </div>
+              </div>
+            </div>
           </div>
 
-          {/* Descripción / backstory */}
+          {/* Fila 5: Narrativa */}
           <div className="field-group">
-            <label className="hud-label hud-label--cyan">DESCRIPCIÓN_&amp;_HISTORIA</label>
+            <label className="hud-label">DESCRIPCIÓN_&amp;_HISTORIA</label>
             <textarea
               className="cyber-input"
               rows={4}
-              style={{ resize: 'vertical', fontFamily: 'var(--font-sans)', fontSize: '0.82rem', lineHeight: 1.6 }}
+              style={{ resize: 'vertical' }}
               value={perfil.descripcion || ''}
               onChange={e => update('perfil', 'descripcion', e.target.value)}
               placeholder="Antecedentes, apariencia, motivaciones..."
@@ -171,247 +211,203 @@ export default function TabPerfil({ data, update }) {
       {/* ── AFILIACIÓN ─────────────────────────────────────── */}
       <Section id="afil" title="[ AFILIACIÓN ]" color="magenta" collapsed={collapsed.has('afil')} onToggle={toggle}>
         <div className="field-row field-row--2">
-          <div className="form-section" style={{ gap: '0.8rem' }}>
-            <div className="hud-label" style={{ opacity: 0.5 }}>PREVIA</div>
-            {[['FACCIÓN', 'faccionPrevia'], ['CLAN', 'clanPrevio']].map(([l, k]) => (
-              <div key={k} className="field-group">
-                <label className="hud-label">{l}</label>
-                <input className="cyber-input" value={afiliacion[k]}
-                  onChange={e => update('afiliacion', k, e.target.value)} />
-              </div>
-            ))}
+          {/* IDENTIDAD PREVIA */}
+          <div className="form-section" style={{ gap: '1rem' }}>
+            <div className="hud-label" style={{ opacity: 0.5 }}>IDENTIDAD_PREVIA</div>
+            
+            <div className="field-group">
+              <label className="hud-label">FACCIÓN</label>
+              <select className="cyber-select" value={afiliacion.faccionPrevia}
+                onChange={e => {
+                  update('afiliacion', 'faccionPrevia', e.target.value);
+                  update('afiliacion', 'clanPrevio', ''); // Reset clan when faction changes
+                }}>
+                <option value="">[ SELECCIONAR_FACCIÓN ]</option>
+                {FACCIONES_VALIDAS.map(f => <option key={f} value={f}>{f}</option>)}
+              </select>
+            </div>
+
+            <div className="field-group">
+              <label className="hud-label">CLAN</label>
+              <select className="cyber-select" value={afiliacion.clanPrevio}
+                onChange={e => update('afiliacion', 'clanPrevio', e.target.value)}
+                disabled={!afiliacion.faccionPrevia}>
+                <option value="">[ SELECCIONAR_CLAN ]</option>
+                {afiliacion.faccionPrevia && (CLAN_MANIPULATIONS[afiliacion.faccionPrevia] || []).map(c => (
+                  <option key={c.category} value={c.category}>{c.category}</option>
+                ))}
+              </select>
+            </div>
           </div>
-          <div className="form-section" style={{ gap: '0.8rem' }}>
-            <div className="hud-label hud-label--cyan">ACTUAL</div>
-            {[['FACCIÓN', 'faccionActual'], ['CLAN', 'clanActual']].map(([l, k]) => (
-              <div key={k} className="field-group">
-                <label className="hud-label hud-label--cyan">{l}</label>
-                <input className="cyber-input" value={afiliacion[k]}
-                  onChange={e => update('afiliacion', k, e.target.value)} />
-              </div>
-            ))}
+
+          {/* IDENTIDAD ACTUAL */}
+          <div className="form-section" style={{ gap: '1rem' }}>
+            <div className="hud-label">IDENTIDAD_ACTUAL</div>
+            
+            <div className="field-group">
+              <label className="hud-label" style={{ color: 'var(--neon-cyan)' }}>FACCIÓN</label>
+              <select className="cyber-select" value={afiliacion.faccionActual}
+                onChange={e => {
+                  update('afiliacion', 'faccionActual', e.target.value);
+                  update('afiliacion', 'clanActual', ''); // Reset clan
+                }}>
+                <option value="">[ SELECCIONAR_FACCIÓN ]</option>
+                {FACCIONES_VALIDAS.map(f => <option key={f} value={f}>{f}</option>)}
+              </select>
+            </div>
+
+            <div className="field-group">
+              <label className="hud-label" style={{ color: 'var(--neon-cyan)' }}>CLAN</label>
+              <select className="cyber-select" value={afiliacion.clanActual}
+                onChange={e => update('afiliacion', 'clanActual', e.target.value)}
+                disabled={!afiliacion.faccionActual}>
+                <option value="">[ SELECCIONAR_CLAN ]</option>
+                {afiliacion.faccionActual && (CLAN_MANIPULATIONS[afiliacion.faccionActual] || []).map(c => (
+                  <option key={c.category} value={c.category}>{c.category}</option>
+                ))}
+              </select>
+            </div>
           </div>
         </div>
       </Section>
 
       {/* ── FORMACIÓN ──────────────────────────────────────── */}
-      <Section id="form" title="[ FORMACIÓN_ACADÉMICA ]" color="amber" collapsed={collapsed.has('form')} onToggle={toggle}>
-        <div className="form-section" style={{ gap: '1.4rem' }}>
-
-          {/* ── Tabla NOMBRE / TIPO ─────────────────────────── */}
+      <Section id="form" title="[ FORMACIÓN_CENTINELA ]" color="amber" collapsed={collapsed.has('form')} onToggle={toggle}>
+        <div className="form-section" style={{ gap: '1.5rem' }}>
           <div>
             <table className="cyber-table">
               <thead>
                 <tr>
-                  <th>NOMBRE</th>
-                  <th style={{ width: '200px' }}>CATEGORÍA</th>
+                  <th>NOMBRE_ENTIDAD</th>
+                  <th style={{ width: '220px' }}>CATEGORÍA</th>
                   <th style={{ width: '32px' }}></th>
                 </tr>
               </thead>
               <tbody>
                 {(perfil.formaciones || []).map((item, idx) => (
-                  <tr key={idx} style={{ animation: 'slide-in-left 0.2s ease both', animationDelay: `${idx * 30}ms` }}>
+                  <tr key={idx}>
                     <td>
-                      <input
-                        className="cyber-input cyber-input--sm cyber-input--amber"
-                        placeholder="Nombre..."
-                        value={item.nombre}
-                        onChange={e => {
-                          const next = [...perfil.formaciones];
-                          next[idx] = { ...next[idx], nombre: e.target.value };
-                          update('perfil', 'formaciones', next);
-                        }}
-                      />
+                      <input className="cyber-input cyber-input--sm" value={item.nombre}
+                        onChange={e => { const next = [...perfil.formaciones]; next[idx] = { ...next[idx], nombre: e.target.value }; update('perfil', 'formaciones', next); }} />
                     </td>
                     <td>
-                      <select
-                        className="cyber-select cyber-select--amber"
-                        value={item.tipo}
-                        onChange={e => {
-                          const next = [...perfil.formaciones];
-                          next[idx] = { ...next[idx], tipo: e.target.value };
-                          update('perfil', 'formaciones', next);
-                        }}
-                      >
+                      <select className="cyber-select" value={item.tipo}
+                        onChange={e => { const next = [...perfil.formaciones]; next[idx] = { ...next[idx], tipo: e.target.value }; update('perfil', 'formaciones', next); }}>
                         <option value="OFICIO">OFICIO</option>
                         <option value="FORMACIÓN_ACADÉMICA">FORMACIÓN_ACADÉMICA</option>
                       </select>
                     </td>
                     <td>
-                      <button
-                        className="dynamic-list__remove"
-                        onClick={() => update('perfil', 'formaciones', perfil.formaciones.filter((_, i) => i !== idx))}
-                      >×</button>
+                      <button className="dynamic-list__remove" onClick={() => update('perfil', 'formaciones', perfil.formaciones.filter((_, i) => i !== idx))}>×</button>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
-            <button
-              className="cyber-button cyber-button--amber cyber-button--full"
-              style={{ marginTop: '0.6rem' }}
-              onClick={() => update('perfil', 'formaciones', [...(perfil.formaciones || []), { nombre: '', tipo: 'FORMACIÓN_ACADÉMICA' }])}
-            >
-              + AGREGAR_ENTRADA
+            <button className="cyber-button cyber-button--add cyber-button--add-amber"
+              onClick={() => update('perfil', 'formaciones', [...(perfil.formaciones || []), { nombre: '', tipo: 'FORMACIÓN_ACADÉMICA' }])}>
+              + REGISTRAR_FORMACIÓN
             </button>
           </div>
 
-          {/* ── IDIOMAS ─────────────────────────────────────── */}
           <div className="field-group">
-            <label className="hud-label">IDIOMAS</label>
+            <label className="hud-label">IDIOMAS_DOMINADOS</label>
             <div className="dynamic-list">
               {perfil.idiomas.map((item, idx) => (
                 <div key={idx} className="dynamic-list__item">
-                  <input className="cyber-input cyber-input--amber" value={item}
-                    onChange={e => idiomasCtrl.onChange(idx, e.target.value)} />
+                  <input className="cyber-input" value={item} onChange={e => idiomasCtrl.onChange(idx, e.target.value)} />
                   <button className="dynamic-list__remove" onClick={() => idiomasCtrl.onRemove(idx)}>×</button>
                 </div>
               ))}
-              <button className="dynamic-list__add dynamic-list__add--amber" onClick={idiomasCtrl.onAdd}>+ AGREGAR</button>
+              <button className="cyber-button cyber-button--add cyber-button--add-amber" onClick={idiomasCtrl.onAdd}>+ VINCULAR_IDIOMA</button>
             </div>
           </div>
-
-          {/* ── HOBBIES ─────────────────────────────────────── */}
-          <div className="field-group">
-            <label className="hud-label">HOBBIES</label>
-            <div className="dynamic-list">
-              {perfil.hobbies.map((item, idx) => (
-                <div key={idx} className="dynamic-list__item">
-                  <input className="cyber-input cyber-input--amber" value={item}
-                    onChange={e => hobbiesCtrl.onChange(idx, e.target.value)} />
-                  <button className="dynamic-list__remove" onClick={() => hobbiesCtrl.onRemove(idx)}>×</button>
-                </div>
-              ))}
-              <button className="dynamic-list__add dynamic-list__add--amber" onClick={hobbiesCtrl.onAdd}>+ AGREGAR</button>
-            </div>
-          </div>
-
         </div>
       </Section>
 
       {/* ── CONEXIONES ─────────────────────────────────────── */}
-      <Section id="con" title="[ CONEXIONES ]" color="amber" collapsed={collapsed.has('con')} onToggle={toggle}>
-        {/* Cards de conexión en lugar de tabla */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+      <Section id="con" title="[ RED_DE_CONTACTOS ]" color="amber" collapsed={collapsed.has('con')} onToggle={toggle}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           {conexiones.map((con, idx) => (
-            <div key={idx} style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 1fr 1fr 1fr 28px',
-              gap: '0.6rem',
-              alignItems: 'center',
-              padding: '0.6rem 0.8rem',
-              border: '1px solid rgba(255,179,0,0.1)',
-              borderLeft: '3px solid rgba(255,179,0,0.3)',
-              background: 'rgba(255,179,0,0.02)',
-              animation: 'slide-in-left 0.25s ease both',
-              animationDelay: `${idx * 40}ms`,
+            <div key={idx} className="glass-panel" style={{
+              display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr 28px', gap: '1rem', alignItems: 'end',
+              padding: '1rem', background: 'rgba(255,159,67,0.02)', borderLeft: '2px solid var(--neon-amber)'
             }}>
-              {[
-                ['NOMBRE_OPERATIVO', 'nombre'],
-                ['CLAN / ORIGEN', 'clan'],
-                ['TIPO_VÍNCULO', 'tipo'],
-                ['FACCIÓN_AFÍN', 'faccion'],
-              ].map(([placeholder, k]) => (
-                <div key={k} className="field-group" style={{ gap: '2px' }}>
-                  <label className="hud-label" style={{ fontSize: '0.48rem' }}>{placeholder}</label>
-                  <input
-                    className="cyber-input cyber-input--sm cyber-input--amber"
-                    value={con[k]}
-                    onChange={e => {
-                      const next = [...conexiones];
-                      next[idx] = { ...next[idx], [k]: e.target.value };
-                      update('conexiones', null, next);
-                    }}
-                  />
+              {[ ['NOMBRE', 'nombre'], ['CLAN', 'clan'], ['VÍNCULO', 'tipo'], ['FACCIÓN', 'faccion'] ].map(([label, k]) => (
+                <div key={k} className="field-group">
+                  <label className="hud-label" style={{ fontSize: '0.5rem' }}>{label}</label>
+                  <input className="cyber-input cyber-input--sm" value={con[k]}
+                    onChange={e => { const next = [...conexiones]; next[idx] = { ...next[idx], [k]: e.target.value }; update('conexiones', null, next); }} />
                 </div>
               ))}
-              <button
-                className="dynamic-list__remove"
-                style={{ alignSelf: 'flex-end', paddingBottom: '4px' }}
-                onClick={() => update('conexiones', null, conexiones.filter((_, i) => i !== idx))}
-              >×</button>
+              <button className="dynamic-list__remove" style={{ paddingBottom: '8px' }}
+                onClick={() => update('conexiones', null, conexiones.filter((_, i) => i !== idx))}>×</button>
             </div>
           ))}
         </div>
-        <button
-          className="cyber-button cyber-button--amber cyber-button--full"
-          style={{ marginTop: '0.8rem' }}
-          onClick={() => update('conexiones', null, [...conexiones, { nombre: '', clan: '', tipo: '', faccion: '' }])}
-        >
-          + ESTABLECER_NUEVA_CONEXIÓN
+        <button className="cyber-button cyber-button--add cyber-button--add-amber"
+          onClick={() => update('conexiones', null, [...conexiones, { nombre: '', clan: '', tipo: '', faccion: '' }])}>
+          + ESTABLECER_CONEXIÓN
         </button>
       </Section>
 
       {/* ── ECONOMÍA ───────────────────────────────────────── */}
-      <Section id="eco" title="[ ECONOMÍA ]" color="green" collapsed={collapsed.has('eco')} onToggle={toggle}>
-        {/* Campos base */}
-        <div className="field-row field-row--2" style={{ marginBottom: '1.5rem' }}>
-          {[
-            ['INGRESO_MENSUAL', 'ingresoMensual'],
-            ['OTROS_INGRESOS',  'otrosIngresos'],
-            ['TERRITORIOS',     'territorios'],
-            ['OTROS_BIENES',    'otrosBienes'],
-          ].map(([l, k]) => (
+      <Section id="eco" title="[ REGISTRO_FINANCIERO ]" color="green" collapsed={collapsed.has('eco')} onToggle={toggle}>
+        <div className="field-row field-row--2" style={{ marginBottom: '2rem' }}>
+          {[ ['INGRESO_FIJO', 'ingresoMensual'], ['ACTIVOS_ADICIONALES', 'otrosIngresos'], ['TERRITORIOS', 'territorios'], ['BIENES', 'otrosBienes'] ].map(([l, k]) => (
             <div key={k} className="field-group">
               <label className="hud-label">{l}</label>
-              <input className="cyber-input cyber-input--green" value={economia[k]}
-                onChange={e => update('economia', k, e.target.value)} />
+              <input className="cyber-input" value={economia[k]} onChange={e => update('economia', k, e.target.value)} />
             </div>
           ))}
         </div>
 
-        {/* Tabla de transacciones */}
         <table className="cyber-table">
           <thead>
             <tr>
-              <th>DESCRIPTOR</th>
-              <th style={{ width: '110px' }}>INGRESO</th>
-              <th style={{ width: '110px' }}>EGRESO</th>
+              <th>DESCRIPTOR_MOVIMIENTO</th>
+              <th style={{ width: '130px' }}>CRED_ENTRADA</th>
+              <th style={{ width: '130px' }}>CRED_SALIDA</th>
               <th style={{ width: '32px' }}></th>
             </tr>
           </thead>
           <tbody>
-            {economia.registros.map((reg, idx) => (
+            {(economia.registros || []).map((reg, idx) => (
               <tr key={idx}>
                 <td>
-                  <input className="cyber-input cyber-input--sm cyber-input--green" value={reg.descripcion}
+                  <input className="cyber-input cyber-input--sm" value={reg.descripcion}
                     onChange={e => { const next = [...economia.registros]; next[idx] = { ...next[idx], descripcion: e.target.value }; update('economia', 'registros', next); }} />
                 </td>
                 <td>
-                  <input className="cyber-input cyber-input--sm cyber-input--green cyber-input--center" placeholder="0" value={reg.ingreso}
+                  <input className="cyber-input cyber-input--sm" placeholder="0" value={reg.ingreso}
                     onChange={e => { const next = [...economia.registros]; next[idx] = { ...next[idx], ingreso: e.target.value }; update('economia', 'registros', next); }} />
                 </td>
                 <td>
-                  <input className="cyber-input cyber-input--sm cyber-input--magenta cyber-input--center" placeholder="0" value={reg.egreso}
+                  <input className="cyber-input cyber-input--sm" style={{ color: 'var(--neon-magenta)' }} placeholder="0" value={reg.egreso}
                     onChange={e => { const next = [...economia.registros]; next[idx] = { ...next[idx], egreso: e.target.value }; update('economia', 'registros', next); }} />
                 </td>
                 <td>
-                  <button className="dynamic-list__remove"
-                    onClick={() => update('economia', 'registros', economia.registros.filter((_, i) => i !== idx))}>×</button>
+                  <button className="dynamic-list__remove" onClick={() => update('economia', 'registros', economia.registros.filter((_, i) => i !== idx))}>×</button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
 
-        <button
-          className="cyber-button cyber-button--green cyber-button--full"
-          style={{ marginTop: '0.8rem' }}
-          onClick={() => update('economia', 'registros', [...economia.registros, { descripcion: '', ingreso: '', egreso: '' }])}
-        >
+        <button className="cyber-button cyber-button--add cyber-button--add-green"
+          onClick={() => update('economia', 'registros', [...(economia.registros || []), { descripcion: '', ingreso: '', egreso: '' }])}>
           + REGISTRAR_TRANSACCIÓN
         </button>
 
-        {/* Balance */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid rgba(57,255,20,0.15)' }}>
-          <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', color: 'var(--text-dimmer)' }}>
-            Ingresos: <span style={{ color: 'var(--neon-green)' }}>{totalIngresos} MP</span>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '2rem', paddingTop: '1.5rem', borderTop: '1px solid var(--glass-border)' }}>
+          <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: 'var(--text-dim)' }}>
+            FLUJO_IN: <span style={{ color: 'var(--neon-green)' }}>{totalIngresos} MP</span>
             &nbsp;&nbsp;·&nbsp;&nbsp;
-            Egresos: <span style={{ color: 'var(--neon-magenta)' }}>{totalEgresos} MP</span>
+            FLUJO_OUT: <span style={{ color: 'var(--neon-magenta)' }}>{totalEgresos} MP</span>
           </div>
-          <div style={{ background: 'rgba(57,255,20,0.08)', padding: '0.4rem 1.2rem', border: '1px solid var(--neon-green)', borderRadius: 'var(--radius-sm)' }}>
-            <span className="hud-label hud-label--green" style={{ display: 'inline', marginRight: '0.5rem' }}>BALANCE_NETO:</span>
-            <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 'bold', color: balance >= 0 ? 'var(--neon-green)' : 'var(--neon-magenta)', fontSize: '1rem' }}>
+          <div className="glass-panel" style={{ padding: '0.6rem 2rem', border: '1px solid rgba(8, 247, 206, 0.3)', background: 'rgba(8,247,206,0.05)' }}>
+            <span className="hud-label" style={{ display: 'inline', marginRight: '1rem', marginBottom: 0 }}>BALANCE_OPERATIVO:</span>
+            <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 'bold', color: balance >= 0 ? 'var(--neon-green)' : 'var(--neon-magenta)', fontSize: '1.2rem' }}>
               {balance} MP
             </span>
           </div>

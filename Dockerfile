@@ -20,4 +20,5 @@ COPY --from=frontend-builder /app/dist ./static
 
 RUN mkdir -p /app/data
 
+ENV DB_PATH=/app/data/cronica.db
 CMD uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}

@@ -3,43 +3,44 @@
    ═══════════════════════════════════════════════════════════════ */
 
 :root {
-  --neon-cyan:    #00f3ff;
-  --neon-magenta: #ff0055;
-  --neon-green:   #39ff14;
-  --neon-amber:   #ffb300;
-  --neon-yellow:  #ffe600;
-  --neon-violet:  #b800ff;
+  /* Paleta Transhumanista: Neones más suaves y sofisticados */
+  --neon-cyan:    #00d2ff; /* Menos saturado, más profundo */
+  --neon-magenta: #ff2e63; /* Más suave */
+  --neon-green:   #08f7ce; /* Más cian-esmeralda */
+  --neon-amber:   #ff9f43; /* Más suave */
+  --neon-yellow:  #feca57;
+  --neon-violet:  #a29bfe;
 
-  --bg-base:      #03050a;
-  --bg-panel:     rgba(255, 255, 255, 0.025);
-  --bg-panel-hover: rgba(255, 255, 255, 0.05);
+  --bg-base:      #05080f;
+  --bg-panel:     rgba(255, 255, 255, 0.015);
+  --bg-panel-hover: rgba(255, 255, 255, 0.04);
 
-  --glass-border:         rgba(255, 255, 255, 0.07);
-  --glass-border-cyan:    rgba(0, 243, 255, 0.3);
-  --glass-border-magenta: rgba(255, 0, 85, 0.3);
-  --glass-border-amber:   rgba(255, 179, 0, 0.3);
-  --glass-border-green:   rgba(57, 255, 20, 0.3);
+  --glass-border:         rgba(255, 255, 255, 0.05);
+  --glass-border-cyan:    rgba(0, 210, 255, 0.2);
+  --glass-border-magenta: rgba(255, 46, 99, 0.2);
+  --glass-border-amber:   rgba(255, 159, 67, 0.2);
+  --glass-border-green:   rgba(8, 247, 206, 0.2);
 
-  --glow-cyan:    0 0 12px rgba(0, 243, 255, 0.5), 0 0 30px rgba(0, 243, 255, 0.15);
-  --glow-magenta: 0 0 12px rgba(255, 0, 85, 0.5),  0 0 30px rgba(255, 0, 85, 0.15);
-  --glow-green:   0 0 12px rgba(57, 255, 20, 0.5),  0 0 30px rgba(57, 255, 20, 0.15);
-  --glow-amber:   0 0 12px rgba(255, 179, 0, 0.5),  0 0 30px rgba(255, 179, 0, 0.15);
+  --glow-cyan:    0 0 15px rgba(0, 210, 255, 0.3), 0 0 40px rgba(0, 210, 255, 0.1);
+  --glow-magenta: 0 0 15px rgba(255, 46, 99, 0.3),  0 0 40px rgba(255, 46, 99, 0.1);
+  --glow-green:   0 0 15px rgba(8, 247, 206, 0.3),  0 0 40px rgba(8, 247, 206, 0.1);
+  --glow-amber:   0 0 15px rgba(255, 159, 67, 0.3),  0 0 40px rgba(255, 159, 67, 0.1);
 
-  --text-primary: rgba(255, 255, 255, 0.92);
-  --text-dim:     rgba(255, 255, 255, 0.4);
-  --text-dimmer:  rgba(255, 255, 255, 0.18);
+  --text-primary: rgba(255, 255, 255, 0.95);
+  --text-dim:     rgba(255, 255, 255, 0.65); /* Mayor contraste */
+  --text-dimmer:  rgba(255, 255, 255, 0.3);
 
   --font-display: 'Orbitron', 'Courier New', monospace;
   --font-mono:    'Share Tech Mono', 'Courier New', monospace;
   --font-sans:    system-ui, -apple-system, sans-serif;
 
-  --radius-sm: 2px;
-  --radius-md: 4px;
+  --radius-sm: 4px; /* Un poco más suave */
+  --radius-md: 8px;
 
-  --transition: 120ms ease;
-  --transition-slow: 300ms ease;
+  --transition: 200ms cubic-bezier(0.23, 1, 0.32, 1); /* Transición premium tipo Apple */
+  --transition-slow: 400ms cubic-bezier(0.23, 1, 0.32, 1);
 
-  --corner-size: 14px;
+  --corner-size: 10px;
 }
 
 *, *::before, *::after {
@@ -53,16 +54,15 @@ html, body, #root { height: 100%; }
 body {
   background-color: var(--bg-base);
   background-image:
-    linear-gradient(rgba(0, 243, 255, 0.022) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 243, 255, 0.022) 1px, transparent 1px);
-  background-size: 40px 40px;
-  /* Grid que se desplaza lentamente — sensación de sistema vivo */
-  animation: grid-drift 25s linear infinite;
+    linear-gradient(rgba(0, 210, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 210, 255, 0.015) 1px, transparent 1px);
+  background-size: 60px 60px; /* Grid más amplio y limpio */
+  animation: grid-drift 40s linear infinite; /* Más lento y sutil */
   color: var(--text-primary);
   font-family: var(--font-sans);
   font-size: 16px;
-  font-weight: 500;
-  line-height: 1.5;
+  font-weight: 400;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -75,55 +75,34 @@ body {
 .cyber-button,
 .char-card__name {
   font-family: var(--font-display);
+  letter-spacing: 2px; /* Más aire */
 }
 
 input, textarea, pre, code, .font-mono {
   font-family: var(--font-mono);
   font-weight: 400;
+  letter-spacing: 0.5px;
 }
 
-span, div, td, th, li, p { font-weight: inherit; }
-
-::-webkit-scrollbar { width: 3px; height: 3px; }
+::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(0, 243, 255, 0.25); border-radius: 2px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(0, 243, 255, 0.5); }
+::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(0, 210, 255, 0.3); }
 
 /* ══════════════════════════════════════════════════════════════
    KEYFRAMES GLOBALES
    ══════════════════════════════════════════════════════════════ */
 
-/* Grid de fondo en movimiento */
 @keyframes grid-drift {
   from { background-position: 0 0, 0 0; }
-  to   { background-position: 40px 40px, 40px 40px; }
+  to   { background-position: 60px 60px, 60px 60px; }
 }
 
-/* Escaneo */
-@keyframes scan {
-  0%   { top: -2px;  opacity: 0.14; }
-  50%  { opacity: 0.05; }
-  100% { top: 100%;  opacity: 0.14; }
-}
-
-@keyframes scan-reverse {
-  0%   { top: 100%; opacity: 0.06; }
-  100% { top: -2px; opacity: 0.06; }
-}
-
-/* Glitch de texto */
-@keyframes glitch-clip-1 {
-  0%, 85%, 100% { clip-path: none; transform: none; opacity: 1; }
-  87%  { clip-path: polygon(0 10%, 100% 10%, 100% 25%, 0 25%); transform: translateX(-4px); opacity: 0.8; }
-  89%  { clip-path: polygon(0 60%, 100% 60%, 100% 78%, 0 78%); transform: translateX(4px); opacity: 0.9; }
-  91%  { clip-path: none; transform: none; }
-}
-
-@keyframes glitch-clip-2 {
-  0%, 87%, 100% { clip-path: none; transform: none; opacity: 0; }
-  88%  { clip-path: polygon(0 35%, 100% 35%, 100% 55%, 0 55%); transform: translateX(5px); opacity: 0.5; color: var(--neon-magenta); }
-  90%  { clip-path: polygon(0 75%, 100% 75%, 100% 88%, 0 88%); transform: translateX(-3px); opacity: 0.4; }
-  92%  { clip-path: none; opacity: 0; }
+/* Reducción de Glitch para no distraer */
+@keyframes glitch-soft {
+  0%, 95%, 100% { transform: none; opacity: 1; }
+  96%  { transform: translateX(-2px); opacity: 0.8; }
+  98%  { transform: translateX(2px); opacity: 0.9; }
 }
 
 /* Entrada de elementos */

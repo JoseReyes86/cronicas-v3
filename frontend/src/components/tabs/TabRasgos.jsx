@@ -16,16 +16,16 @@ export default function TabRasgos({ data, update }) {
     update('rasgos', null, rasgos.filter((_, i) => i !== idx));
 
   return (
-    <div className="glass-panel glass-panel--top-cyan">
-      <div className="section-header section-header--cyan">[ REGISTRO_DE_RASGOS_OPERATIVOS ]</div>
+    <div className="glass-panel" style={{ borderTop: '2px solid var(--neon-cyan)' }}>
+      <div className="hud-label" style={{ marginBottom: '2rem' }}>[ REGISTRO_DE_RASGOS_OPERATIVOS ]</div>
 
       <table className="cyber-table">
         <thead>
           <tr>
-            <th style={{ width: '200px' }}>DESCRIPTOR_NOMINAL</th>
-            <th>ESPECIFICACIÓN_TÉCNICA</th>
-            <th style={{ width: '80px' }}>COST_MP</th>
-            <th style={{ width: '80px' }}>NV_ACC</th>
+            <th style={{ width: '220px' }}>LOG_DESCRIPTOR</th>
+            <th>ESPECIFICACIÓN_TÉCNICA_DEL_RASGO</th>
+            <th style={{ width: '100px' }}>COST_MP</th>
+            <th style={{ width: '100px' }}>NV_SINCRO</th>
             <th style={{ width: '40px' }}></th>
           </tr>
         </thead>
@@ -56,8 +56,8 @@ export default function TabRasgos({ data, update }) {
         </tbody>
       </table>
 
-      <button className="cyber-button cyber-button--full" style={{ marginTop: '1.5rem' }} onClick={addRasgo}>
-        + CARGAR_NUEVO_RASGO_EN_EL_NÚCLEO
+      <button className="cyber-button cyber-button--add cyber-button--add-cyan" style={{ marginTop: '2rem' }} onClick={addRasgo}>
+        + VINCULAR_NUEVO_RASGO_OPERATIVO
       </button>
     </div>
   );

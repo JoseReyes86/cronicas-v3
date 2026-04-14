@@ -3,7 +3,7 @@ export const DEFAULT_CHARACTER = {
     nombre: '', alias: '', claseCentinela: '',
     edad: '', edadAparenta: '', fechaNacimiento: '',
     estatura: '', peso: '', contextura: '',
-    nacionalidad: '', residencia: '', estadoCivil: '', oficio: '',
+    nacionalidad: [''], residencia: '', estadoCivil: '', oficio: '',
     descripcion: '',
     estudios: [''], idiomas: [''], hobbies: [''],
     formaciones: [{ nombre: '', tipo: 'FORMACIÓN_ACADÉMICA' }]

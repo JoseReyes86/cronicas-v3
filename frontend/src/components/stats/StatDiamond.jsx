@@ -14,6 +14,23 @@ import React from 'react';
  *   lastDashed  {bool}    último rombo con borde punteado
  */
 export default function StatDiamond({ value = 0, blockedBits = 0, max = 5, onChange, onToggleBlock, readOnly = false, firstLocked = false, lastDashed = false, color }) {
+  const [lastValue, setLastValue] = React.useState(value);
+  const [changedIdx, setChangedIdx] = React.useState(null);
+
+  React.useEffect(() => {
+    if (value !== lastValue) {
+      for (let i = 0; i < max; i++) {
+        if ((value & (1 << i)) !== (lastValue & (1 << i))) {
+          setChangedIdx(i);
+          break;
+        }
+      }
+      setLastValue(value);
+      const timer = setTimeout(() => setChangedIdx(null), 400);
+      return () => clearTimeout(timer);
+    }
+  }, [value, lastValue, max]);
+
   const handleClick = (e, idx) => {
     if (readOnly) return;
     if (firstLocked && idx === 0) return;
@@ -39,6 +56,7 @@ export default function StatDiamond({ value = 0, blockedBits = 0, max = 5, onCha
         else if (blocked)   cls += ' stat-diamond--blocked';
         else if (filled)    cls += ' stat-diamond--filled';
         if (isLastDashed)   cls += ' stat-diamond--dashed';
+        if (changedIdx === i) cls += ' just-changed';
 
         const colorStyle = color && (filled || isFirstLocked) && !blocked ? {
           background: color,

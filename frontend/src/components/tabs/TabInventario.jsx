@@ -1,6 +1,6 @@
 import React from 'react';
 
-function ItemList({ items, onUpdate }) {
+function ItemList({ items, onUpdate, colorClass = "" }) {
   const add    = () => onUpdate([...items, { nombre: '', tamano: '' }]);
   const remove = (idx) => onUpdate(items.filter((_, i) => i !== idx));
   const change = (idx, field, val) => {
@@ -12,8 +12,8 @@ function ItemList({ items, onUpdate }) {
       <table className="cyber-table">
         <thead>
           <tr>
-            <th>NOMBRE</th>
-            <th style={{ width: '100px' }}>TAMAÑO</th>
+            <th>NOMBRE_ELEMENTO</th>
+            <th style={{ width: '120px' }}>CARGA</th>
             <th style={{ width: '40px' }}></th>
           </tr>
         </thead>
@@ -22,10 +22,12 @@ function ItemList({ items, onUpdate }) {
             <tr key={idx}>
               <td>
                 <input className="cyber-input cyber-input--sm" value={item.nombre}
+                  placeholder="---"
                   onChange={e => change(idx, 'nombre', e.target.value)} />
               </td>
               <td>
-                <input className="cyber-input cyber-input--sm cyber-input--center" value={item.tamano}
+                <input className="cyber-input cyber-input--sm" style={{ textAlign: 'center' }} value={item.tamano}
+                  placeholder="0.0"
                   onChange={e => change(idx, 'tamano', e.target.value)} />
               </td>
               <td>
@@ -35,8 +37,12 @@ function ItemList({ items, onUpdate }) {
           ))}
         </tbody>
       </table>
-      <button className="cyber-button cyber-button--full" style={{ marginTop: '1rem' }} onClick={add}>
-        + AGREGAR_ÍTEM
+      <button 
+        className={`cyber-button cyber-button--add ${colorClass}`}
+        style={{ marginTop: '1rem' }} 
+        onClick={add}
+      >
+        + VINCULAR_NUEVO_ÍTEM
       </button>
     </div>
   );
@@ -47,17 +53,19 @@ export default function TabInventario({ data, update }) {
 
   return (
     <div className="form-grid--2">
-      <div className="glass-panel glass-panel--top-cyan">
-        <div className="section-header section-header--cyan">[ MOCHILA ]</div>
+      <div className="glass-panel" style={{ borderTop: '2px solid var(--neon-cyan)' }}>
+        <div className="hud-label" style={{ marginBottom: '1.5rem' }}>[ UNIDAD_DE_CARGA_PROLONGADA ]</div>
         <ItemList
+          colorClass="cyber-button--add-cyan"
           items={inventario.mochila}
           onUpdate={items => update('inventario', 'mochila', items)}
         />
       </div>
 
-      <div className="glass-panel glass-panel--top-magenta">
-        <div className="section-header section-header--magenta">[ INVENTARIO_GENERAL ]</div>
+      <div className="glass-panel" style={{ borderTop: '2px solid var(--neon-magenta)' }}>
+        <div className="hud-label" style={{ marginBottom: '1.5rem' }}>[ ALMACÉN_DE_RECURSOS_GENERAL ]</div>
         <ItemList
+          colorClass="cyber-button--add-magenta"
           items={inventario.general}
           onUpdate={items => update('inventario', 'general', items)}
         />

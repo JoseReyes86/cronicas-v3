@@ -36,14 +36,13 @@ export default function TabManipulaciones({ data, update }) {
 
   return (
     <div className="form-section">
-      {/* Sub-tabs */}
-      <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
-        {[['clanes', 'CLAN'], ['esferas', 'ESFERAS']].map(([id, label]) => (
+      {/* HUD-style Sub-tabs */}
+      <div className="tab-bar-secondary no-print" style={{ marginBottom: '2rem' }}>
+        {[['clanes', 'UNIDADES_CLAN'], ['esferas', 'ESFERAS_DE_DATOS']].map(([id, label]) => (
           <button
             key={id}
-            className={`cyber-button ${subTab === id ? 'active' : ''}`}
+            className={`tab-btn ${subTab === id ? 'active' : ''}`}
             onClick={() => setSubTab(id)}
-            style={{ minWidth: '200px' }}
           >
             {label}
           </button>
@@ -52,23 +51,38 @@ export default function TabManipulaciones({ data, update }) {
 
       {/* ── CLANES ─────────────────────────────────────────── */}
       {subTab === 'clanes' && (
-        <div className="form-section">
-          {/* Selector de clan */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', justifyContent: 'center' }}>
+        <div className="form-section" style={{ animation: 'fade-up 0.4s ease both' }}>
+          {/* Selector de clan - HUD Navigation */}
+          <div style={{ 
+            display: 'flex', 
+            flexWrap: 'wrap', 
+            gap: '0.8rem', 
+            justifyContent: 'center',
+            padding: '1rem',
+            background: 'rgba(255,255,255,0.02)',
+            border: '1px solid var(--glass-border)',
+            borderRadius: 'var(--radius-md)'
+          }}>
             {Object.keys(CLAN_MANIPULATIONS).map(clan => {
               const cc = CLAN_COLORS[clan] || CLAN_COLORS.PARTICULARES;
               const isActive = activeClan === clan;
               return (
                 <button
                   key={clan}
-                  className="cyber-button"
-                  style={{
-                    fontSize: '0.7rem', padding: '0.4rem 1rem',
-                    color: isActive ? cc.primary : undefined,
-                    borderColor: isActive ? cc.primary : undefined,
-                    boxShadow: isActive ? `0 0 12px ${cc.glow}, inset 0 0 8px ${cc.glow}` : undefined,
-                  }}
                   onClick={() => setActiveClan(clan)}
+                  style={{
+                    padding: '0.6rem 1.2rem',
+                    background: isActive ? `${cc.primary}15` : 'transparent',
+                    border: `1px solid ${isActive ? cc.primary : 'transparent'}`,
+                    color: isActive ? cc.primary : 'var(--text-dim)',
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: '0.65rem',
+                    letterSpacing: '1px',
+                    cursor: 'pointer',
+                    transition: 'all 0.25s ease',
+                    boxShadow: isActive ? `0 0 15px ${cc.glow}` : 'none',
+                    borderRadius: 'var(--radius-sm)'
+                  }}
                 >
                   {clan}
                 </button>
@@ -80,16 +94,16 @@ export default function TabManipulaciones({ data, update }) {
           {(() => {
             const cc = CLAN_COLORS[activeClan] || CLAN_COLORS.PARTICULARES;
             return (
-              <div className="form-grid--auto">
+              <div className="form-grid--auto" style={{ marginTop: '1rem' }}>
                 {(CLAN_MANIPULATIONS[activeClan] || []).map((cat, i) => (
                   <div key={i} className="glass-panel" style={{ borderTop: `2px solid ${cc.primary}` }}>
-                    <div className="section-header" style={{ fontSize: '0.7rem', color: cc.primary, borderBottomColor: `${cc.primary}33` }}>
+                    <div className="hud-label" style={{ marginBottom: '1.2rem', color: cc.primary }}>
                       {cat.category.toUpperCase()}
                     </div>
-                    <div className="form-section" style={{ gap: '0.7rem' }}>
+                    <div className="form-section" style={{ gap: '0.8rem' }}>
                       {cat.powers.map(p => (
                         <div key={p} className="stat-row">
-                          <span style={{ fontSize: '0.82rem' }}>{p}</span>
+                          <span className="stat-row__label" style={{ fontSize: '0.75rem' }}>{p}</span>
                           <StatDiamond
                             value={manipulaciones.clanes[p]?.val || 0}
                             max={cat.max}
@@ -109,14 +123,13 @@ export default function TabManipulaciones({ data, update }) {
 
       {/* ── ESFERAS ────────────────────────────────────────── */}
       {subTab === 'esferas' && (
-        <div className="form-section">
+        <div className="form-section" style={{ animation: 'fade-up 0.4s ease both' }}>
           <div className="form-grid--auto">
             {Object.entries(SPHERE_MANIPULATIONS.LISTS).map(([sphere, powers]) => {
               const circuloVal = manipulaciones.esferas.circulos?.[sphere] || 0;
               return (
-                <div key={sphere} className="glass-panel glass-panel--top-magenta">
-                  {/* 4 círculos marcables */}
-                  <div style={{ display: 'flex', gap: '6px', marginBottom: '0.6rem', justifyContent: 'center' }}>
+                <div key={sphere} className="glass-panel" style={{ borderTop: '2px solid var(--neon-magenta)' }}>
+                  <div style={{ display: 'flex', gap: '8px', marginBottom: '1.2rem', justifyContent: 'center' }}>
                     {[0, 1, 2, 3].map(bit => {
                       const filled = (circuloVal & (1 << bit)) !== 0;
                       return (
@@ -125,25 +138,26 @@ export default function TabManipulaciones({ data, update }) {
                           type="button"
                           onClick={() => updateSphereCircle(sphere, bit)}
                           style={{
-                            width: '18px', height: '18px',
-                            borderRadius: '50%',
+                            width: '16px', height: '16px',
                             border: `1px solid var(--neon-magenta)`,
                             background: filled ? 'var(--neon-magenta)' : 'transparent',
-                            boxShadow: filled ? '0 0 8px var(--neon-magenta)' : 'none',
+                            boxShadow: filled ? '0 0 10px var(--neon-magenta)' : 'none',
                             cursor: 'pointer',
                             padding: 0,
-                            flexShrink: 0,
-                            transition: 'all 0.15s ease',
+                            borderRadius: '2px',
+                            transition: 'all 0.2s ease',
                           }}
                         />
                       );
                     })}
                   </div>
-                  <div className="section-header section-header--magenta" style={{ fontSize: '0.7rem' }}>{sphere}</div>
-                  <div className="form-section" style={{ gap: '0.7rem' }}>
+                  <div className="hud-label" style={{ marginBottom: '1.2rem', color: 'var(--neon-magenta)', textAlign: 'center' }}>
+                    {sphere}
+                  </div>
+                  <div className="form-section" style={{ gap: '0.8rem' }}>
                     {powers.map(p => (
                       <div key={p} className="stat-row">
-                        <span style={{ fontSize: '0.8rem' }}>{p}</span>
+                        <span className="stat-row__label" style={{ fontSize: '0.75rem' }}>{p}</span>
                         <StatDiamond
                           value={manipulaciones.esferas.poderes[p] || 0}
                           max={4}
@@ -157,16 +171,16 @@ export default function TabManipulaciones({ data, update }) {
             })}
           </div>
 
-          <div>
-            <div className="section-header section-header--cyan" style={{ textAlign: 'center' }}>[ COMBINADAS ]</div>
+          <div style={{ marginTop: '3rem' }}>
+            <div className="hud-label" style={{ textAlign: 'center', marginBottom: '1.5rem', opacity: 0.6 }}>[ REDES_COMBINADAS ]</div>
             <div className="form-grid--auto">
               {SPHERE_MANIPULATIONS.COMBINED.map(group => (
-                <div key={group.category} className="glass-panel glass-panel--top-cyan">
-                  <div className="section-header section-header--cyan" style={{ fontSize: '0.7rem' }}>{group.category}</div>
-                  <div className="form-section" style={{ gap: '0.7rem' }}>
+                <div key={group.category} className="glass-panel" style={{ borderTop: '2px solid var(--neon-cyan)' }}>
+                  <div className="hud-label" style={{ marginBottom: '1.2rem' }}>{group.category}</div>
+                  <div className="form-section" style={{ gap: '0.8rem' }}>
                     {group.powers.map(p => (
                       <div key={p} className="stat-row">
-                        <span style={{ fontSize: '0.8rem' }}>{p}</span>
+                        <span className="stat-row__label" style={{ fontSize: '0.75rem' }}>{p}</span>
                         <StatDiamond
                           value={manipulaciones.esferas.poderes[p] || 0}
                           max={group.max}

@@ -18,13 +18,13 @@ const TABS = [
   { id: 'naturaleza',     label: 'NATURALEZA' },
 ];
 
-/* Estados del guardado */
+/* Estados del guardado — Estética Transhumanista */
 const STATUS = {
   idle:   null,
-  dirty:  { label: '● SIN_GUARDAR',  color: 'var(--neon-amber)',   anim: 'pulse-opacity 1.5s ease-in-out infinite' },
-  saving: { label: '⟳ SINCRONIZANDO', color: 'var(--neon-cyan)',    anim: 'pulse-opacity 0.6s ease-in-out infinite' },
-  saved:  { label: '✓ GUARDADO',      color: 'var(--neon-green)',   anim: 'none' },
-  error:  { label: '✕ ERROR',         color: 'var(--neon-magenta)', anim: 'none' },
+  dirty:  { label: '● PENDIENTE_SINCRO', color: 'var(--neon-amber)',   anim: 'pulse-opacity 2s infinite' },
+  saving: { label: '⟳ SINCRONIZANDO',    color: 'var(--neon-cyan)',    anim: 'pulse-opacity 0.8s infinite' },
+  saved:  { label: '✓ ARCHIVO_SEGURO',   color: 'var(--neon-green)',   anim: 'none' },
+  error:  { label: '✕ ERROR_SINCRO',     color: 'var(--neon-magenta)', anim: 'none' },
 };
 
 export default function CharacterForm({ characterId, initialData, onSave, onClose }) {
@@ -113,43 +113,40 @@ export default function CharacterForm({ characterId, initialData, onSave, onClos
   };
 
   const status = STATUS[saveStatus];
-  const ident  = data.perfil?.nombre || data.perfil?.alias || 'IDENT_PENDING';
+  const ident  = data.perfil?.nombre || data.perfil?.alias || 'EXPEDIENTE_NUEVO';
 
   return (
-    <div className="form-shell">
-      <div className="scan-line scan-line--primary" />
-      <div className="scan-line scan-line--secondary" />
-
+    <div className="form-shell" style={{ animation: 'fade-in 0.5s ease' }}>
       {/* ── Header ─────────────────────────────────────────────── */}
       <header className="hud-header no-print">
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1.2rem' }}>
-          <div className="hud-title" style={{ fontSize: '0.8rem' }}>
-            EXPEDIENTE // {ident}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+          <button className="cyber-button" onClick={onClose}>
+            ← VOLVER
+          </button>
+          <div className="hud-title" style={{ fontSize: '1rem', letterSpacing: '4px' }}>
+            {ident}
           </div>
           {status && (
-            <span style={{
-              fontFamily: 'var(--font-mono)',
-              fontSize: '0.6rem',
+            <span className="status-badge" style={{
               color: status.color,
+              borderColor: status.color + '33',
               animation: status.anim,
-              letterSpacing: '1px',
             }}>
               {status.label}
             </span>
           )}
         </div>
-        <div className="hud-actions">
-          <span className="hint-text">CTRL+S para guardar</span>
-          <button className="cyber-button" onClick={handleSaveNow} disabled={saveStatus === 'saving'}>
-            {saveStatus === 'saving' ? '⟳' : '[ GUARDAR ]'}
+        <div className="hud-actions" style={{ display: 'flex', gap: '0.8rem' }}>
+          <button className={`cyber-button ${saveStatus === 'error' ? 'cyber-button--magenta' : 'cyber-button--cyan'}`} onClick={handleSaveNow} disabled={saveStatus === 'saving'}>
+            {saveStatus === 'saving' ? '⟳ SINCRONIZANDO' : 'GUARDAR_AHORA'}
           </button>
-          <button className="cyber-button" onClick={() => window.print()}>PDF</button>
-          <button className="cyber-button cyber-button--magenta" onClick={onClose}>CERRAR</button>
+          <button className="cyber-button cyber-button--amber" onClick={() => window.print()}>EXPORTAR_PDF</button>
+          <button className="cyber-button cyber-button--magenta" onClick={onClose}>DESCONECTAR</button>
         </div>
       </header>
 
       {/* ── Tab bar ────────────────────────────────────────────── */}
-      <div className="tab-bar no-print" style={{ padding: '0 1.5rem' }}>
+      <div className="tab-bar no-print" style={{ padding: '0 2rem', borderBottom: '1px solid var(--glass-border)' }}>
         {TABS.map(t => (
           <button
             key={t.id}
@@ -161,8 +158,8 @@ export default function CharacterForm({ characterId, initialData, onSave, onClos
         ))}
       </div>
 
-      {/* ── Tab content — key fuerza re-animación al cambiar tab ─ */}
-      <div className="form-body">
+      {/* ── Tab content ────────────────────────────────────────── */}
+      <div className="form-body" style={{ animation: 'fade-up 0.4s ease both' }}>
         <div key={activeTab} className="tab-content">
           {activeTab === 'perfil'         && <TabPerfil         data={data} update={update} />}
           {activeTab === 'estado'         && <TabEstado         data={data} update={update} />}

@@ -196,6 +196,11 @@
 .form-grid--3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; }
 .form-grid--auto { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
 
+.field-row { display: grid; gap: 1rem; }
+.field-row--2 { grid-template-columns: 1fr 1fr; }
+.field-row--3 { grid-template-columns: 1fr 1fr 1fr; }
+.field-row--4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+
 /* ── Armas/Armaduras grid responsivo ─────────────────────────── */
 .equip-grid {
   display: grid;

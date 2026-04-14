@@ -29,7 +29,7 @@ export default function TabEstado({ data, update }) {
   const renderVirtud = (key) => {
     const stat = virtudes[key];
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
         <div className="stat-row">
           <span className="stat-row__label">{VIRT_LABELS[key]}</span>
           <StatDiamond
@@ -40,12 +40,12 @@ export default function TabEstado({ data, update }) {
         </div>
         <div className="field-row field-row--2">
           <div className="field-group">
-            <label className="hud-label">CD</label>
+            <label className="hud-label" style={{ fontSize: '0.55rem' }}>DIFICULTAD_CD</label>
             <input className="cyber-input cyber-input--sm" value={stat.cd}
               onChange={e => update('virtudes', key, { ...stat, cd: e.target.value })} />
           </div>
           <div className="field-group">
-            <label className="hud-label">COSTO</label>
+            <label className="hud-label" style={{ fontSize: '0.55rem' }}>COSTE_SINCRO</label>
             <input className="cyber-input cyber-input--sm" value={stat.costo}
               onChange={e => update('virtudes', key, { ...stat, costo: e.target.value })} />
           </div>
@@ -59,33 +59,27 @@ export default function TabEstado({ data, update }) {
 
       {/* ── METAPSICOSIS + CAPACIDAD DE CARGA ──────────────── */}
       <div className="form-grid--2">
-        <div className="glass-panel glass-panel--cyan">
-          <div className="section-header section-header--cyan">[ METAPSICOSIS ]</div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1.2rem', flexWrap: 'wrap' }}>
+        <div className="glass-panel">
+          <div className="hud-label" style={{ marginBottom: '1.2rem', color: 'var(--neon-cyan)' }}>[ NÚCLEO_METAPSICOSIS ]</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
             <StatDiamond value={metapsicosis} max={7} onChange={v => update('metapsicosis', null, v)} />
-            <div className="field-group">
-              <label className="hud-label">CANTIDAD</label>
-              <input
-                className="cyber-input cyber-input--sm"
-                style={{ width: '52px' }}
-                readOnly
-                value={popCount(metapsicosis)}
-              />
+            <div className="field-group" style={{ borderLeft: '1px solid var(--glass-border)', paddingLeft: '1.5rem' }}>
+              <label className="hud-label" style={{ fontSize: '0.5rem' }}>ÍNDICE_ACTIVO</label>
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.2rem', color: 'var(--neon-cyan)' }}>
+                {popCount(metapsicosis)} / 7
+              </div>
             </div>
           </div>
         </div>
-        <div className="glass-panel glass-panel--cyan">
-          <div className="section-header section-header--cyan">[ CAPACIDAD_DE_CARGA ]</div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1.2rem', flexWrap: 'wrap' }}>
+        <div className="glass-panel">
+          <div className="hud-label" style={{ marginBottom: '1.2rem', color: 'var(--neon-cyan)' }}>[ CAPACIDAD_DE_CARGA ]</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
             <StatDiamond value={capacidadCarga} max={8} onChange={v => update('capacidadCarga', null, v)} />
-            <div className="field-group">
-              <label className="hud-label">CANTIDAD</label>
-              <input
-                className="cyber-input cyber-input--sm"
-                style={{ width: '52px' }}
-                readOnly
-                value={popCount(capacidadCarga)}
-              />
+            <div className="field-group" style={{ borderLeft: '1px solid var(--glass-border)', paddingLeft: '1.5rem' }}>
+              <label className="hud-label" style={{ fontSize: '0.5rem' }}>CARGA_MÁXIMA</label>
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.2rem', color: 'var(--neon-cyan)' }}>
+                {popCount(capacidadCarga)} / 8
+              </div>
             </div>
           </div>
         </div>
@@ -93,9 +87,9 @@ export default function TabEstado({ data, update }) {
 
       {/* ── ATRIBUTOS + DONES ───────────────────────────────── */}
       <div className="form-grid--2">
-        <div className="glass-panel glass-panel--top-cyan">
-          <div className="section-header section-header--cyan">[ ATRIBUTOS ]</div>
-          <div className="form-section" style={{ gap: '0.8rem' }}>
+        <div className="glass-panel" style={{ borderTop: '2px solid var(--neon-cyan)' }}>
+          <div className="hud-label" style={{ marginBottom: '1.5rem' }}>MATRIZ_ATRIBUTOS</div>
+          <div className="form-section" style={{ gap: '1rem' }}>
             {Object.entries(atributos).map(([key, stat]) => (
               <div key={key} className="stat-row">
                 <span className="stat-row__label">{ATTR_LABELS[key]}</span>
@@ -110,9 +104,9 @@ export default function TabEstado({ data, update }) {
           </div>
         </div>
 
-        <div className="glass-panel glass-panel--top-magenta">
-          <div className="section-header section-header--magenta">[ DONES ]</div>
-          <div className="form-section" style={{ gap: '0.8rem' }}>
+        <div className="glass-panel" style={{ borderTop: '2px solid var(--neon-magenta)' }}>
+          <div className="hud-label" style={{ marginBottom: '1.5rem' }}>SINTAXIS_DE_DONES</div>
+          <div className="form-section" style={{ gap: '1rem' }}>
             {Object.entries(dones).map(([key, stat]) => (
               <div key={key} className="stat-row">
                 <span className="stat-row__label">{DONES_LABELS[key]}</span>
@@ -128,59 +122,56 @@ export default function TabEstado({ data, update }) {
       </div>
 
       {/* ── RESISTENCIA ────────────────────────────────────── */}
-      <div className="glass-panel glass-panel--top-magenta">
-        <div className="section-header section-header--magenta">[ RESISTENCIA ]</div>
+      <div className="glass-panel" style={{ borderTop: '2px solid var(--neon-magenta)' }}>
+        <div className="hud-label" style={{ marginBottom: '2rem' }}>ESTADOS_VITALES_&amp;_RESISTENCIA</div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: '2rem', rowGap: '2rem', alignItems: 'stretch' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', columnGap: '3rem', rowGap: '3rem' }}>
 
-          {/* Row 1: VIGOR | AUTOCONTROL */}
-          <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'flex-start' }}>
-            <label className="hud-label" style={{ flexShrink: 0, paddingTop: '4px', minWidth: '110px' }}>VIGOR</label>
+          {/* VIGOR | AUTOCONTROL */}
+          <div style={{ display: 'flex', gap: '2rem', alignItems: 'flex-start' }}>
+            <label className="hud-label" style={{ minWidth: '120px', paddingTop: '6px' }}>VIGOR</label>
             <SquareStat value={ev.vigor} max={20} rows={2} markers={[1, 2, 3]}
               onChange={v => update('estados_vitales', 'vigor', v)} />
           </div>
-          <div style={{ paddingLeft: '1.5rem', borderLeft: '1px solid rgba(0,243,255,0.12)', display: 'flex', alignItems: 'center' }}>
+          <div style={{ paddingLeft: '2rem', borderLeft: '1px solid var(--glass-border)' }}>
             {renderVirtud('autocontrol')}
           </div>
 
-          {/* Row 2: CONSTITUCIÓN | ALERTA */}
-          <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'flex-start' }}>
-            <label className="hud-label" style={{ flexShrink: 0, paddingTop: '4px', minWidth: '110px' }}>CONSTITUCIÓN</label>
+          {/* CONSTITUCIÓN | ALERTA */}
+          <div style={{ display: 'flex', gap: '2rem', alignItems: 'flex-start' }}>
+            <label className="hud-label" style={{ minWidth: '120px', paddingTop: '6px' }}>CONSTITUCIÓN</label>
             <SquareStat value={ev.constitucion} max={10} rows={1} markers={[1, 2, 3]}
               onChange={v => update('estados_vitales', 'constitucion', v)} />
           </div>
-          <div style={{ paddingLeft: '1.5rem', borderLeft: '1px solid rgba(0,243,255,0.12)', display: 'flex', alignItems: 'center' }}>
+          <div style={{ paddingLeft: '2rem', borderLeft: '1px solid var(--glass-border)' }}>
             {renderVirtud('alerta')}
           </div>
 
-          {/* Row 3: CORDURA | VALENTÍA */}
+          {/* CORDURA | VALENTÍA */}
           <div>
-            {/* Grid de 4 cols: label | casillas | umbral | notas — header + filas alineadas */}
-            <div style={{ display: 'grid', gridTemplateColumns: '110px auto 40px auto', columnGap: '1rem', rowGap: '10px', alignItems: 'center' }}>
-              <label className="hud-label hud-label--cyan">CORDURA</label>
+            <div style={{ display: 'grid', gridTemplateColumns: '120px auto 40px 1fr', columnGap: '1rem', rowGap: '12px', alignItems: 'center' }}>
+              <label className="hud-label" style={{ color: 'var(--neon-cyan)' }}>CORDURA</label>
               <div />
               <div />
-              <label className="hud-label hud-label--magenta">DAÑO_ESTRÉS</label>
+              <label className="hud-label" style={{ fontSize: '0.6rem', opacity: 0.6 }}>DAÑO_PSÍQUICO</label>
 
               {[1, 2, 3, 4].map(nv => (
                 <React.Fragment key={nv}>
-                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: 'var(--text-dim)', fontWeight: 700 }}>
-                    NV_{nv}
+                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: 'var(--text-dim)', fontWeight: 600 }}>
+                    NV_0{nv}
                   </span>
-                  <div style={{ flexShrink: 0 }}>
-                    <SquareStat
-                      value={ev.cordura[`nv${nv}`]} max={5} rows={1}
-                      markers={nv === 1 ? [1, 2, 3] : []}
-                      onChange={v => update('estados_vitales', `cordura.nv${nv}`, v)}
-                    />
-                  </div>
-                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', textAlign: 'center', fontWeight: 'bold' }}>
+                  <SquareStat
+                    value={ev.cordura[`nv${nv}`]} max={5} rows={1}
+                    markers={nv === 1 ? [1, 2, 3] : []}
+                    onChange={v => update('estados_vitales', `cordura.nv${nv}`, v)}
+                  />
+                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', textAlign: 'center', opacity: 0.5 }}>
                     {nv * 5}
                   </span>
                   <input
-                    className="cyber-input cyber-input--sm cyber-input--magenta cyber-input--center"
-                    style={{ width: '100%' }}
-                    placeholder="---"
+                    className="cyber-input cyber-input--sm"
+                    style={{ color: 'var(--neon-magenta)' }}
+                    placeholder="Diagnóstico..."
                     value={ev.corduraNotas[`nv${nv}`]}
                     onChange={e => update('estados_vitales', `corduraNotas.nv${nv}`, e.target.value)}
                   />
@@ -188,58 +179,56 @@ export default function TabEstado({ data, update }) {
               ))}
             </div>
           </div>
-          <div style={{ paddingLeft: '1.5rem', borderLeft: '1px solid rgba(0,243,255,0.12)', display: 'flex', alignItems: 'center' }}>
+          <div style={{ paddingLeft: '2rem', borderLeft: '1px solid var(--glass-border)' }}>
             {renderVirtud('valentia')}
           </div>
 
         </div>
 
-        {/* VOLUNTAD — fuera del grid para evitar celda vacía en columna derecha */}
-        <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center', marginTop: '2rem' }}>
-          <label className="hud-label" style={{ minWidth: '110px' }}>VOLUNTAD</label>
+        <div style={{ display: 'flex', gap: '2rem', alignItems: 'center', marginTop: '3rem', paddingTop: '2rem', borderTop: '1px solid var(--glass-border)' }}>
+          <label className="hud-label" style={{ minWidth: '120px' }}>VOLUNTAD</label>
           <SquareStat value={ev.voluntad} max={10} rows={1}
             onChange={v => update('estados_vitales', 'voluntad', v)} />
         </div>
       </div>
 
       {/* ── COMBATE ────────────────────────────────────────── */}
-      <div className="glass-panel glass-panel--cyan">
-        <div className="section-header section-header--cyan">[ COMBATE ]</div>
+      <div className="glass-panel">
+        <div className="hud-label" style={{ marginBottom: '1.5rem' }}>SOFTWARE_DE_COMBATE</div>
 
-        {/* Tabla: ARTE | SUBTIPO | NV | MAESTRÍAS(×3) */}
-        <table className="cyber-table" style={{ marginBottom: '1.5rem' }}>
+        <table className="cyber-table">
           <thead>
             <tr>
-              <th>ARTE DE COMBATE</th>
-              <th style={{ width: '140px' }}>SUBTIPO</th>
-              <th style={{ width: '60px' }}>NV</th>
-              <th>MAESTRÍAS</th>
+              <th>ARTE_MILITAR</th>
+              <th style={{ width: '180px' }}>PROCESADOR_ASOCIADO</th>
+              <th style={{ width: '80px' }}>NIVEL</th>
+              <th>MAESTRÍAS_VINCULADAS</th>
             </tr>
           </thead>
           <tbody>
             {combate.artesDeCombate.map((arte, idx) => (
               <tr key={idx}>
                 <td>
-                  <input className="cyber-input cyber-input--sm" placeholder="Arte..." value={arte.nombre}
+                  <input className="cyber-input cyber-input--sm" placeholder="Definir arte..." value={arte.nombre}
                     onChange={e => { const next = [...combate.artesDeCombate]; next[idx] = { ...next[idx], nombre: e.target.value }; update('combate', 'artesDeCombate', next); }} />
                 </td>
                 <td>
                   <select className="cyber-select" value={arte.subtipo}
                     onChange={e => { const next = [...combate.artesDeCombate]; next[idx] = { ...next[idx], subtipo: e.target.value }; update('combate', 'artesDeCombate', next); }}>
-                    <option value="">---</option>
+                    <option value="">SIN_PROCESADOR</option>
                     {Object.entries(DONES_LABELS).map(([k, label]) => (
                       <option key={k} value={k}>{label}</option>
                     ))}
                   </select>
                 </td>
-                <td style={{ textAlign: 'center' }}>
+                <td>
                   <SquareStat value={arte.nv} max={2} rows={1}
                     onChange={v => { const next = [...combate.artesDeCombate]; next[idx] = { ...next[idx], nv: v }; update('combate', 'artesDeCombate', next); }} />
                 </td>
                 <td>
-                  <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <div style={{ display: 'flex', gap: '0.6rem' }}>
                     {[0, 1, 2].map(m => (
-                      <input key={m} className="cyber-input cyber-input--sm" style={{ flex: 1 }} placeholder="Maestría..."
+                      <input key={m} className="cyber-input cyber-input--sm" style={{ flex: 1 }} placeholder={`M_0${m+1}`}
                         value={combate.maestrias[idx * 3 + m] || ''}
                         onChange={e => { const next = [...combate.maestrias]; next[idx * 3 + m] = e.target.value; update('combate', 'maestrias', next); }} />
                     ))}
@@ -250,21 +239,19 @@ export default function TabEstado({ data, update }) {
           </tbody>
         </table>
 
-        {/* M. MARCIAL */}
-        <div>
-          <label className="hud-label hud-label--cyan" style={{ marginBottom: '0.8rem' }}>M. MARCIAL</label>
-          <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-            <input className="cyber-input cyber-input--sm" style={{ flex: 1 }} placeholder="Nombre..."
+        <div style={{ marginTop: '2rem', padding: '1.5rem', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--glass-border)' }}>
+          <label className="hud-label" style={{ marginBottom: '1rem', display: 'block' }}>MÉTODO_MARCIAL_AVANZADO</label>
+          <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
+            <input className="cyber-input" style={{ flex: 1 }} placeholder="Identificar método..."
               value={combate.mMarcial.nombre}
               onChange={e => update('combate', 'mMarcial', { ...combate.mMarcial, nombre: e.target.value })} />
-            <div>
-              <label className="hud-label">NV</label>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <span className="hud-label" style={{ marginBottom: 0 }}>RANGO</span>
               <SquareStat value={combate.mMarcial.nv} max={4} rows={1}
                 onChange={v => update('combate', 'mMarcial', { ...combate.mMarcial, nv: v })} />
             </div>
           </div>
         </div>
-
       </div>
 
     </div>
