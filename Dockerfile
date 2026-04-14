@@ -18,4 +18,6 @@ COPY backend/ .
 # El build del frontend queda en /app/static
 COPY --from=frontend-builder /app/dist ./static
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+RUN mkdir -p /app/data
+
+CMD uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}
