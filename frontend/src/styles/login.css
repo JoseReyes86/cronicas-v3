@@ -1,0 +1,302 @@
+/* ═══════════════════════════════════════════════════════════════
+   LOGIN — Split-screen: identidad del sistema + formulario
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Shell ───────────────────────────────────────────────────── */
+.login-shell {
+  min-height: 100vh;
+  display: flex;
+  background:
+    radial-gradient(ellipse at 10% 40%, rgba(0, 243, 255, 0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at 90% 60%, rgba(255, 0, 85, 0.05) 0%, transparent 50%),
+    var(--bg-base);
+}
+
+/* ── Panel izquierdo (identidad) ─────────────────────────────── */
+.login-left {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+  overflow: hidden;
+  min-width: 0;
+}
+
+/* Dot grid animado de fondo */
+.login-left__bg {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(0, 243, 255, 0.07) 1px, transparent 1px);
+  background-size: 24px 24px;
+  animation: grid-drift 18s linear infinite reverse;
+  pointer-events: none;
+}
+
+/* Vignette para que el contenido resalte sobre el grid */
+.login-left::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 40%, rgba(3,5,10,0.6) 100%);
+  pointer-events: none;
+}
+
+.login-left__content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+  width: 100%;
+  max-width: 520px;
+}
+
+/* ASCII más grande en el panel izquierdo */
+.login-ascii-wrap {
+  width: 100%;
+  animation: pulse-opacity 5s ease-in-out infinite;
+}
+
+.login-ascii-wrap .sentinel-ascii {
+  border: none;
+  background: transparent;
+  padding: 0;
+}
+
+.login-ascii-wrap .sentinel-ascii__pre {
+  font-size: clamp(5px, 1.6vw, 11px);
+  text-shadow: 0 0 8px rgba(0, 243, 255, 0.8);
+}
+
+/* Título principal — con glitch */
+.login-brand {
+  font-family: var(--font-display);
+  font-size: clamp(0.8rem, 2vw, 1.3rem);
+  font-weight: 900;
+  letter-spacing: 6px;
+  color: var(--neon-cyan);
+  text-shadow: var(--glow-cyan);
+  text-transform: uppercase;
+  text-align: center;
+  position: relative;
+  animation: flicker 10s ease-in-out infinite;
+  animation-delay: 4s;
+}
+
+.login-brand.hud-title--glitch::before {
+  content: attr(data-text);
+  position: absolute;
+  top: 0; left: 0; width: 100%;
+  color: var(--neon-magenta);
+  animation: glitch-clip-1 8s ease-in-out infinite;
+  pointer-events: none;
+}
+.login-brand.hud-title--glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0; left: 0; width: 100%;
+  color: var(--neon-cyan);
+  animation: glitch-clip-2 8s ease-in-out infinite;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.login-lore {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--text-dimmer);
+  letter-spacing: 3px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+/* Separador con degradado */
+.login-sep {
+  width: 80%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+  opacity: 0.3;
+  animation: pulse-opacity 4s ease-in-out infinite;
+}
+
+/* Readouts de estado del sistema */
+.login-readouts {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+  max-width: 320px;
+}
+
+.login-readout-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  animation: fade-up 0.3s ease both;
+}
+
+.login-readout-label {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  color: var(--text-dimmer);
+  min-width: 80px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.login-readout-dots {
+  flex: 1;
+  border-bottom: 1px dotted rgba(255, 255, 255, 0.08);
+  min-width: 20px;
+}
+
+/* Footer del panel izquierdo */
+.login-left__footer {
+  margin-top: 0.5rem;
+}
+
+/* ── Divisor vertical ────────────────────────────────────────── */
+.login-divider {
+  width: 1px;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(0, 243, 255, 0.08) 10%,
+    var(--neon-cyan) 40%,
+    var(--neon-magenta) 60%,
+    rgba(255, 0, 85, 0.08) 90%,
+    transparent 100%
+  );
+  flex-shrink: 0;
+  animation: pulse-opacity 4s ease-in-out infinite;
+}
+
+/* ── Panel derecho (formulario) ──────────────────────────────── */
+.login-right {
+  width: 400px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2.5rem;
+}
+
+.login-form-wrap {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+  animation: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0.2s;
+}
+
+.login-form-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.login-form-title {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 900;
+  letter-spacing: 5px;
+  color: var(--neon-cyan);
+  text-shadow: var(--glow-cyan);
+  text-transform: uppercase;
+}
+
+.login-form-subtitle {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--text-dimmer);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.login-error {
+  background: rgba(255, 0, 85, 0.08);
+  border: 1px solid rgba(255, 0, 85, 0.3);
+  border-left: 3px solid var(--neon-magenta);
+  color: var(--neon-magenta);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  padding: 0.5rem 0.8rem;
+  letter-spacing: 1px;
+  animation: fade-up 0.3s ease;
+}
+
+.login-toggle {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  transition: color var(--transition), text-shadow var(--transition);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-align: left;
+}
+.login-toggle:hover { color: var(--neon-cyan); text-shadow: 0 0 8px rgba(0,243,255,0.4); }
+
+/* Marca de agua clasificada */
+.login-classified {
+  font-family: var(--font-mono);
+  font-size: 0.48rem;
+  color: var(--text-dimmer);
+  letter-spacing: 2px;
+  text-align: center;
+  opacity: 0.5;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--glass-border);
+}
+
+/* ── Sentinel ASCII (base) ───────────────────────────────────── */
+.sentinel-ascii {
+  width: 100%;
+  overflow: hidden;
+  background: rgba(0, 243, 255, 0.02);
+  border: 1px solid rgba(0, 243, 255, 0.08);
+  border-radius: var(--radius-sm);
+  padding: 0.5rem 0;
+  display: flex;
+  justify-content: center;
+}
+
+.sentinel-ascii__pre {
+  margin: 0;
+  padding: 0;
+  line-height: 0.8;
+  font-size: clamp(4px, 1.2vw, 8.5px);
+  color: var(--neon-cyan);
+  font-family: var(--font-mono);
+  text-shadow: 0 0 6px rgba(0, 243, 255, 0.7);
+  white-space: pre;
+  opacity: 0.85;
+}
+
+/* ── Responsive ──────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .login-shell    { flex-direction: column; }
+  .login-left     { padding: 2rem 1.5rem; border-bottom: 1px solid rgba(0,243,255,0.1); }
+  .login-ascii-wrap .sentinel-ascii__pre { font-size: clamp(4px, 2vw, 9px); }
+  .login-divider  { display: none; }
+  .login-right    { width: 100%; padding: 2rem 1.5rem; }
+}
+
+@media (max-width: 480px) {
+  .login-left  { padding: 1.5rem 1rem; }
+  .login-right { padding: 1.5rem 1rem; }
+  .login-brand { font-size: 0.75rem; letter-spacing: 3px; }
+  .login-form-title { font-size: 0.7rem; letter-spacing: 3px; }
+}

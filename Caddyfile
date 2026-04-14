@@ -1,0 +1,5 @@
+cronica.lab {
+    reverse_proxy /api/* backend:8000
+    reverse_proxy /auth/* backend:8000
+    reverse_proxy frontend:80
+}
