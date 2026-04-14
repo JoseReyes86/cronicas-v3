@@ -48,8 +48,11 @@
   cursor: pointer;
   text-transform: uppercase;
   transition: all var(--transition);
-  overflow: hidden;
   border-radius: var(--radius-sm);
+}
+
+@media (max-width: 480px) {
+  .cyber-button { padding: 0.5rem 1rem; font-size: 0.6rem; letter-spacing: 1px; }
 }
 
 .cyber-button:hover {
@@ -208,7 +211,11 @@
   margin-bottom: 2rem;
   overflow-x: auto;
   padding-bottom: 4px;
+  -webkit-overflow-scrolling: touch;
 }
+
+.tab-bar::-webkit-scrollbar { height: 2px; }
+.tab-bar::-webkit-scrollbar-thumb { background: var(--glass-border-cyan); }
 
 .tab-btn {
   background: transparent;

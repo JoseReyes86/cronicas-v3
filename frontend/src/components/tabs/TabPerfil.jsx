@@ -151,7 +151,7 @@ export default function TabPerfil({ data, update }) {
           </div>
 
           {/* Fila 4: Origen y Estatus (Multinacionalidad) */}
-          <div className="field-row field-row--2" style={{ alignItems: 'start' }}>
+          <div className="field-row field-row--2">
             <div className="field-group">
               <label className="hud-label">NACIONALIDAD_ES</label>
               <div className="dynamic-list">
