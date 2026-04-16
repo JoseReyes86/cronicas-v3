@@ -34,10 +34,10 @@ export default function TabNaturaleza({ data, update }) {
 
       {/* ── NATURALEZA ─────────────────────────────────────── */}
       <div className="glass-panel" style={{ borderTop: '2px solid var(--neon-cyan)' }}>
-        <div className="hud-label" style={{ marginBottom: '2rem' }}>PULSIONES_DE_NATURALEZA</div>
+        <div className="hud-label" style={{ marginBottom: '2rem' }}>PULSIONES DE NATURALEZA</div>
 
         <div className="form-grid--3" style={{ marginBottom: '2.5rem' }}>
-          {[['ESTADO_INSTINTIVO', 'instinto'], ['SISTEMA_LIBERTAD', 'libertad'], ['NÚCLEO_HUMANISMO', 'humanismo']].map(([label, key]) => (
+          {[['ESTADO INSTINTIVO', 'instinto'], ['SISTEMA LIBERTAD', 'libertad'], ['NÚCLEO HUMANISMO', 'humanismo']].map(([label, key]) => (
             <div key={key} className="field-group" style={{ alignItems: 'center' }}>
               <label className="hud-label" style={{ textAlign: 'center', fontSize: '0.6rem' }}>{label}</label>
               <SquareStat value={naturaleza[key]} max={5} rows={1}
@@ -46,7 +46,7 @@ export default function TabNaturaleza({ data, update }) {
           ))}
         </div>
 
-        <div className="hud-label" style={{ marginBottom: '1.2rem', opacity: 0.5 }}>BITÁCORA_DE_NATURALEZA</div>
+        <div className="hud-label" style={{ marginBottom: '1.2rem', opacity: 0.5 }}>BITÁCORA DE NATURALEZA</div>
         <div className="form-section" style={{ gap: '0.8rem' }}>
           {naturaleza.notas.map((nota, idx) => (
             <div key={idx} className="field-group">
@@ -64,7 +64,7 @@ export default function TabNaturaleza({ data, update }) {
 
       {/* ── LA VERDAD ──────────────────────────────────────── */}
       <div className="glass-panel" style={{ borderTop: '2px solid var(--neon-magenta)' }}>
-        <div className="hud-label" style={{ marginBottom: '2.5rem' }}>MAPEO_DE_LA_VERDAD</div>
+        <div className="hud-label" style={{ marginBottom: '2.5rem' }}>MAPEO DE LA VERDAD</div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '4rem', alignItems: 'start' }}>
           {/* Pirámide de nodos - Neural Style */}
@@ -119,7 +119,7 @@ export default function TabNaturaleza({ data, update }) {
 
           {/* Banco de Verdades */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <div className="hud-label" style={{ marginBottom: '0.5rem', opacity: 0.6 }}>REGISTRO_DE_DATOS_ADQUIRIDOS</div>
+            <div className="hud-label" style={{ marginBottom: '0.5rem', opacity: 0.6 }}>REGISTRO DE DATOS ADQUIRIDOS</div>
             <div style={{ 
               display: 'flex', 
               flexDirection: 'column', 

@@ -59,7 +59,7 @@ export const DEFAULT_CHARACTER = {
 
   combate: {
     artesDeCombate: Array.from({ length: 5 }, () => ({ nombre: '', subtipo: '', nv: 0 })),
-    maestrias: Array.from({ length: 15 }, () => ''),
+    maestrias: Array.from({ length: 20 }, () => ''),
     contadores: [{ nombre: '', val: 0 }, { nombre: '', val: 0 }],
     mMarcial: { nombre: '', nv: 0 }
   },

@@ -94,22 +94,28 @@
 
 /* ── Inputs (Alta Legibilidad) ──────────────────────────────── */
 .cyber-input {
-  background: rgba(0, 0, 0, 0.6);
-  border: 1px solid var(--glass-border);
+  background: rgba(15, 25, 45, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: var(--radius-sm);
   color: var(--text-primary);
   font-family: var(--font-mono);
-  font-size: 0.9rem;
-  padding: 0.6rem 0.8rem;
+  font-size: 1rem;
+  padding: 0.7rem 1rem;
   width: 100%;
   transition: all var(--transition);
   outline: none;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.cyber-input:hover {
+  border-color: rgba(0, 210, 255, 0.4);
+  background: rgba(15, 25, 45, 0.85);
 }
 
 .cyber-input:focus {
   border-color: var(--neon-cyan);
-  background: rgba(0, 210, 255, 0.05);
-  box-shadow: 0 0 15px rgba(0, 210, 255, 0.1);
+  background: rgba(0, 210, 255, 0.08);
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 210, 255, 0.2);
 }
 
 .cyber-input::placeholder { color: var(--text-dimmer); opacity: 0.5; }
@@ -118,27 +124,39 @@
 
 /* ── Select ──────────────────────────────────────────────────── */
 .cyber-select {
-  background: rgba(0, 0, 0, 0.6);
-  border: 1px solid var(--glass-border);
+  background: rgba(15, 25, 45, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: var(--radius-sm);
   color: var(--text-primary);
   font-family: var(--font-mono);
-  font-size: 0.85rem;
-  padding: 0.5rem 0.8rem;
+  font-size: 0.95rem;
+  padding: 0.6rem 1rem;
   width: 100%;
   outline: none;
   cursor: pointer;
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='rgba(255,255,255,0.4)'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='rgba(0, 210, 255, 0.6)'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 0.8rem center;
   padding-right: 2rem;
   transition: all var(--transition);
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5);
+  color-scheme: dark; /* Fuerza al navegador a usar menú desplegable oscuro */
+}
+
+.cyber-select option {
+  background: #0d1117;
+  color: white;
+}
+
+.cyber-select:hover {
+  border-color: rgba(0, 210, 255, 0.4);
 }
 
 .cyber-select:focus {
   border-color: var(--neon-cyan);
-  box-shadow: 0 0 15px rgba(0, 210, 255, 0.1);
+  background: rgba(0, 210, 255, 0.08);
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 210, 255, 0.2);
 }
 
 /* ── Labels ──────────────────────────────────────────────────── */

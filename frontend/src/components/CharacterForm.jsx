@@ -21,10 +21,10 @@ const TABS = [
 /* Estados del guardado — Estética Transhumanista */
 const STATUS = {
   idle:   null,
-  dirty:  { label: '● PENDIENTE_SINCRO', color: 'var(--neon-amber)',   anim: 'pulse-opacity 2s infinite' },
+  dirty:  { label: '● PENDIENTE SINCRO', color: 'var(--neon-amber)',   anim: 'pulse-opacity 2s infinite' },
   saving: { label: '⟳ SINCRONIZANDO',    color: 'var(--neon-cyan)',    anim: 'pulse-opacity 0.8s infinite' },
-  saved:  { label: '✓ ARCHIVO_SEGURO',   color: 'var(--neon-green)',   anim: 'none' },
-  error:  { label: '✕ ERROR_SINCRO',     color: 'var(--neon-magenta)', anim: 'none' },
+  saved:  { label: '✓ ARCHIVO SEGURO',   color: 'var(--neon-green)',   anim: 'none' },
+  error:  { label: '✕ ERROR SINCRO',     color: 'var(--neon-magenta)', anim: 'none' },
 };
 
 export default function CharacterForm({ characterId, initialData, onSave, onClose }) {
@@ -138,9 +138,9 @@ export default function CharacterForm({ characterId, initialData, onSave, onClos
         </div>
         <div className="hud-actions" style={{ display: 'flex', gap: '0.8rem' }}>
           <button className={`cyber-button ${saveStatus === 'error' ? 'cyber-button--magenta' : 'cyber-button--cyan'}`} onClick={handleSaveNow} disabled={saveStatus === 'saving'}>
-            {saveStatus === 'saving' ? '⟳ SINCRONIZANDO' : 'GUARDAR_AHORA'}
+            {saveStatus === 'saving' ? '⟳ SINCRONIZANDO' : 'GUARDAR AHORA'}
           </button>
-          <button className="cyber-button cyber-button--amber" onClick={() => window.print()}>EXPORTAR_PDF</button>
+          <button className="cyber-button cyber-button--amber" onClick={() => window.print()}>EXPORTAR PDF</button>
           <button className="cyber-button cyber-button--magenta" onClick={onClose}>DESCONECTAR</button>
         </div>
       </header>

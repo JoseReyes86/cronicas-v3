@@ -13,7 +13,7 @@ import React from 'react';
  *   firstLocked {bool}    primer rombo siempre activo, no interactuable
  *   lastDashed  {bool}    último rombo con borde punteado
  */
-export default function StatDiamond({ value = 0, blockedBits = 0, max = 5, onChange, onToggleBlock, readOnly = false, firstLocked = false, lastDashed = false, color }) {
+export default function StatDiamond({ value = 0, blockedBits = 0, max = 5, onChange, onToggleBlock, readOnly = false, firstLocked = false, lastDashed = false, color, scalar = false }) {
   const [lastValue, setLastValue] = React.useState(value);
   const [changedIdx, setChangedIdx] = React.useState(null);
 
@@ -38,7 +38,19 @@ export default function StatDiamond({ value = 0, blockedBits = 0, max = 5, onCha
     if (e.shiftKey && onToggleBlock) {
       onToggleBlock(blockedBits ^ bit);
     } else if (onChange) {
-      onChange(value ^ bit);
+      if (scalar) {
+        // En modo escalar, activamos todos hasta el índice clickeado
+        const mask = (1 << (idx + 1)) - 1;
+        if (value === mask) {
+           // Si ya es el mismo nivel, bajamos al anterior
+           // (Nota: si firstLocked es true e idx es 0, el return al inicio de la función ya lo ignora)
+           onChange((1 << idx) - 1);
+        } else {
+           onChange(mask);
+        }
+      } else {
+        onChange(value ^ bit);
+      }
     }
   };
 

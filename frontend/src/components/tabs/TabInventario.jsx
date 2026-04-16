@@ -12,7 +12,7 @@ function ItemList({ items, onUpdate, colorClass = "" }) {
       <table className="cyber-table">
         <thead>
           <tr>
-            <th>NOMBRE_ELEMENTO</th>
+            <th>NOMBRE ELEMENTO</th>
             <th style={{ width: '120px' }}>CARGA</th>
             <th style={{ width: '40px' }}></th>
           </tr>
@@ -42,7 +42,7 @@ function ItemList({ items, onUpdate, colorClass = "" }) {
         style={{ marginTop: '1rem' }} 
         onClick={add}
       >
-        + VINCULAR_NUEVO_ÍTEM
+        + VINCULAR NUEVO ÍTEM
       </button>
     </div>
   );
@@ -54,7 +54,7 @@ export default function TabInventario({ data, update }) {
   return (
     <div className="form-grid--2">
       <div className="glass-panel" style={{ borderTop: '2px solid var(--neon-cyan)' }}>
-        <div className="hud-label" style={{ marginBottom: '1.5rem' }}>[ UNIDAD_DE_CARGA_PROLONGADA ]</div>
+        <div className="hud-label" style={{ marginBottom: '1.5rem' }}>[ UNIDAD DE CARGA PROLONGADA ]</div>
         <ItemList
           colorClass="cyber-button--add-cyan"
           items={inventario.mochila}
@@ -63,7 +63,7 @@ export default function TabInventario({ data, update }) {
       </div>
 
       <div className="glass-panel" style={{ borderTop: '2px solid var(--neon-magenta)' }}>
-        <div className="hud-label" style={{ marginBottom: '1.5rem' }}>[ ALMACÉN_DE_RECURSOS_GENERAL ]</div>
+        <div className="hud-label" style={{ marginBottom: '1.5rem' }}>[ ALMACÉN DE RECURSOS GENERAL ]</div>
         <ItemList
           colorClass="cyber-button--add-magenta"
           items={inventario.general}

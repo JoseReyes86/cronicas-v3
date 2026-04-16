@@ -17,15 +17,15 @@ export default function TabRasgos({ data, update }) {
 
   return (
     <div className="glass-panel" style={{ borderTop: '2px solid var(--neon-cyan)' }}>
-      <div className="hud-label" style={{ marginBottom: '2rem' }}>[ REGISTRO_DE_RASGOS_OPERATIVOS ]</div>
+      <div className="hud-label" style={{ marginBottom: '2rem' }}>[ REGISTRO DE RASGOS OPERATIVOS ]</div>
 
       <table className="cyber-table">
         <thead>
           <tr>
-            <th style={{ width: '220px' }}>LOG_DESCRIPTOR</th>
-            <th>ESPECIFICACIÓN_TÉCNICA_DEL_RASGO</th>
-            <th style={{ width: '100px' }}>COST_MP</th>
-            <th style={{ width: '100px' }}>NV_SINCRO</th>
+            <th style={{ width: '220px' }}>LOG DESCRIPTOR</th>
+            <th>ESPECIFICACIÓN TÉCNICA DEL RASGO</th>
+            <th style={{ width: '100px' }}>COST MP</th>
+            <th style={{ width: '100px' }}>NV SINCRO</th>
             <th style={{ width: '40px' }}></th>
           </tr>
         </thead>
@@ -57,7 +57,7 @@ export default function TabRasgos({ data, update }) {
       </table>
 
       <button className="cyber-button cyber-button--add cyber-button--add-cyan" style={{ marginTop: '2rem' }} onClick={addRasgo}>
-        + VINCULAR_NUEVO_RASGO_OPERATIVO
+        + VINCULAR NUEVO RASGO OPERATIVO
       </button>
     </div>
   );

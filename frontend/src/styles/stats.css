@@ -123,6 +123,13 @@
   box-shadow: 0 0 6px rgba(255,255,255,0.25);
 }
 
+.square-stat__box--locked {
+  background: rgba(0, 243, 255, 0.35);
+  border-color: rgba(0, 243, 255, 0.6);
+  box-shadow: 0 0 4px rgba(0, 243, 255, 0.2);
+  cursor: default;
+}
+
 .square-stat__marker {
   width: 18px;
   height: 18px;

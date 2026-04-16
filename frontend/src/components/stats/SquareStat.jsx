@@ -20,7 +20,7 @@ const CELL_GAP  = 4;   // px — gap entre celdas
 
 export default function SquareStat({
   value = 0, max = 10, rows = 1, markers = [],
-  onChange, readOnly = false
+  onChange, readOnly = false, scalar = false, minLevel = 0
 }) {
   const [lastValue, setLastValue] = React.useState(value);
   const [changedIdx, setChangedIdx] = React.useState(null);
@@ -50,7 +50,26 @@ export default function SquareStat({
 
   const toggleBit = (idx) => {
     if (readOnly || !onChange) return;
-    onChange(value ^ (1 << idx));
+    if (idx < minLevel) return; // Proteccion de nivel base
+    
+    if (scalar) {
+      const dataMask = (1 << max) - 1;
+      const clickedMask = (1 << (idx + 1)) - 1;
+      const currentData = value & dataMask;
+      const markersData = value & ~dataMask;
+
+      let newData;
+      if (currentData === clickedMask) {
+        const lowerIdx = Math.max(idx, minLevel);
+        newData = (1 << lowerIdx) - 1;
+      } else {
+        newData = clickedMask;
+      }
+      
+      onChange(newData | markersData);
+    } else {
+      onChange(value ^ (1 << idx));
+    }
   };
 
   const toggleMarker = (markerIdx) => {
@@ -70,14 +89,20 @@ export default function SquareStat({
     const cells = [];
     for (let i = start; i < end; i++) {
       const colInRow    = i - start;
-      const filled      = (value & (1 << i)) !== 0;
+      const isLocked    = i < minLevel;
+      const filled      = isLocked || (value & (1 << i)) !== 0;
       const markerPos   = colInRow - markerOffset;
       const hasMarker   = rowIdx === 0 && markerPos >= 0 && markerPos < markers.length;
       const markerActive = hasMarker && (value & (1 << (10 + markerPos))) !== 0;
 
+      let boxCls = 'square-stat__box';
+      if (isLocked) boxCls += ' square-stat__box--locked'; // Clases para CSS
+      else if (filled) boxCls += ' square-stat__box--filled';
+      if (changedIdx === i) boxCls += ' just-changed';
+
       cells.push(
         <div key={i} className="square-stat__cell">
-          {/* Slot de marker — siempre presente para mantener alineación */}
+          {/* Slot de marker */}
           {showMarkerRow && (
             <div className="square-stat__marker-slot">
               {hasMarker && (
@@ -94,8 +119,9 @@ export default function SquareStat({
           )}
           <button
             type="button"
-            className={`square-stat__box ${filled ? 'square-stat__box--filled' : ''} ${changedIdx === i ? 'just-changed' : ''}`}
+            className={boxCls}
             onClick={() => toggleBit(i)}
+            style={isLocked ? { cursor: 'default' } : {}}
           />
         </div>
       );

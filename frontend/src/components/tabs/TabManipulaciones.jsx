@@ -38,7 +38,7 @@ export default function TabManipulaciones({ data, update }) {
     <div className="form-section">
       {/* HUD-style Sub-tabs */}
       <div className="tab-bar-secondary no-print" style={{ marginBottom: '2rem' }}>
-        {[['clanes', 'UNIDADES_CLAN'], ['esferas', 'ESFERAS_DE_DATOS']].map(([id, label]) => (
+        {[['clanes', 'UNIDADES CLAN'], ['esferas', 'ESFERAS DE DATOS']].map(([id, label]) => (
           <button
             key={id}
             className={`tab-btn ${subTab === id ? 'active' : ''}`}
@@ -172,7 +172,7 @@ export default function TabManipulaciones({ data, update }) {
           </div>
 
           <div style={{ marginTop: '3rem' }}>
-            <div className="hud-label" style={{ textAlign: 'center', marginBottom: '1.5rem', opacity: 0.6 }}>[ REDES_COMBINADAS ]</div>
+            <div className="hud-label" style={{ textAlign: 'center', marginBottom: '1.5rem', opacity: 0.6 }}>[ REDES COMBINADAS ]</div>
             <div className="form-grid--auto">
               {SPHERE_MANIPULATIONS.COMBINED.map(group => (
                 <div key={group.category} className="glass-panel" style={{ borderTop: '2px solid var(--neon-cyan)' }}>

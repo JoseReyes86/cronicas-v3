@@ -1,6 +1,7 @@
 /* ═══════════════════════════════════════════════════════════════
    BASE — Variables, reset, tipografía, keyframes globales
    ═══════════════════════════════════════════════════════════════ */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap');
 
 :root {
   /* Paleta Transhumanista: Neones más suaves y sofisticados */
@@ -30,9 +31,9 @@
   --text-dim:     rgba(255, 255, 255, 0.65); /* Mayor contraste */
   --text-dimmer:  rgba(255, 255, 255, 0.3);
 
-  --font-display: 'Orbitron', 'Courier New', monospace;
-  --font-mono:    'Share Tech Mono', 'Courier New', monospace;
-  --font-sans:    system-ui, -apple-system, sans-serif;
+  --font-display: 'Outfit', sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+  --font-sans:    'Outfit', sans-serif;
 
   --radius-sm: 4px; /* Un poco más suave */
   --radius-md: 8px;
@@ -60,7 +61,7 @@ body {
   animation: grid-drift 40s linear infinite; /* Más lento y sutil */
   color: var(--text-primary);
   font-family: var(--font-sans);
-  font-size: 16px;
+  font-size: 18px; /* Incrementado para mayor legibilidad */
   font-weight: 400;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;

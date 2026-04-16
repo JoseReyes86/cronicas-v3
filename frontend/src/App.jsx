@@ -186,7 +186,7 @@ function App() {
           CRÓNICA_OS v3.0 // SENTINEL
         </div>
         <div style={{ display: 'flex', gap: '1.2rem', alignItems: 'center' }}>
-          <span className="status-badge">ENLACE_ESTABLE</span>
+          <span className="status-badge">ENLACE ESTABLE</span>
           <button className="cyber-button cyber-button--magenta" onClick={handleLogout}>
             DESCONECTAR
           </button>
@@ -197,7 +197,7 @@ function App() {
         {/* ── Sidebar ─── */}
         <aside className="home-sidebar" style={{ animation: 'slide-in-left 0.5s ease both' }}>
           <div className="hud-label" style={{ marginBottom: '1rem', opacity: 0.8 }}>
-            EXPEDIENTES_ACTIVOS
+            EXPEDIENTES ACTIVOS
           </div>
 
           <div className="char-list-scroll">
@@ -211,7 +211,7 @@ function App() {
                 textAlign: 'center',
                 fontFamily: 'var(--font-mono)',
               }}>
-                // SIN_REGISTROS
+                // SIN REGISTROS
               </div>
             ) : (
               characters.map((char, i) => (
@@ -235,7 +235,7 @@ function App() {
             style={{ animation: 'fade-up 0.5s ease both', animationDelay: '0.3s' }}
             onClick={() => navigate('edit', null)}
           >
-            + NUEVO_EXPEDIENTE
+            + NUEVO EXPEDIENTE
           </button>
         </aside>
 
@@ -267,9 +267,9 @@ function App() {
               gap: '0.8rem',
               alignItems: 'center',
             }}>
-              <DataRow label="ESTADO"      value="SISTEMA_OPERATIVO"       color="var(--neon-green)"   delay={400}  />
-              <DataRow label="NIVEL"       value="AUTORIZACIÓN_MÁXIMA"    color="var(--neon-cyan)"    delay={800}  />
-              <DataRow label="REGISTROS"   value={`${characters.length} ARCHIVOS_CARGADOS`} color="var(--neon-amber)"   delay={1200}  />
+              <DataRow label="ESTADO"      value="SISTEMA OPERATIVO"       color="var(--neon-green)"   delay={400}  />
+              <DataRow label="NIVEL"       value="AUTORIZACIÓN MÁXIMA"    color="var(--neon-cyan)"    delay={800}  />
+              <DataRow label="REGISTROS"   value={`${characters.length} ARCHIVOS CARGADOS`} color="var(--neon-amber)"   delay={1200}  />
             </div>
 
             <div style={{
@@ -287,7 +287,7 @@ function App() {
               letterSpacing: '4px',
               opacity: 0.5
             }}>
-              SISTEMA_CRÓNICA // VER:3.0.0_STABLE // SECURE_ACCESS
+              SISTEMA CRÓNICA // VER:3.1.0 STABLE // SECURE ACCESS
             </div>
           </div>
         </div>
@@ -304,9 +304,9 @@ function App() {
         fontFamily: 'var(--font-mono)',
         color: 'var(--text-dimmer)'
       }}>
-        <span>CORE_STABILITY: 98.2%</span>
+        <span>CORE STABILITY: 98.2%</span>
         <span>
-          THE_DEVIANTS_CHRONICLE // <AnimatedCount value={characters.length} /> REGISTROS_DETECTADOS
+          THE DEVIANTS CHRONICLE // <AnimatedCount value={characters.length} /> REGISTROS DETECTADOS
         </span>
       </footer>
     </div>
