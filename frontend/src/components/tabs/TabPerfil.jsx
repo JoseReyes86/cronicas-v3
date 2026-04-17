@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { CLAN_MANIPULATIONS } from '../../data/manipulationsCatalog';
+import CyberDatePicker from '../CyberDatePicker';
 
 const FACCIONES_VALIDAS = Object.keys(CLAN_MANIPULATIONS).filter(f => f !== 'PARTICULARES');
 
@@ -115,33 +116,35 @@ export default function TabPerfil({ data, update }) {
           {/* Fila 2: Datos Temporales */}
           <div className="field-row field-row--3">
             <div className="field-group">
-              <label className="hud-label">EDAD</label>
-              <input className="cyber-input" value={perfil.edad}
-                onChange={e => update('perfil', 'edad', e.target.value)} />
+              <label className="hud-label">EDAD (AÑOS)</label>
+              <input className="cyber-input" type="text" inputMode="numeric" pattern="[0-9]*" value={perfil.edad}
+                onChange={e => update('perfil', 'edad', e.target.value.replace(/\D/g, ''))} />
             </div>
             <div className="field-group">
-              <label className="hud-label">EDAD APARENTE</label>
-              <input className="cyber-input" value={perfil.edadAparenta}
-                onChange={e => update('perfil', 'edadAparenta', e.target.value)} />
+              <label className="hud-label">EDAD APARENTE (AÑOS)</label>
+              <input className="cyber-input" type="text" inputMode="numeric" pattern="[0-9]*" value={perfil.edadAparenta}
+                onChange={e => update('perfil', 'edadAparenta', e.target.value.replace(/\D/g, ''))} />
             </div>
             <div className="field-group">
               <label className="hud-label">FECHA NACIMIENTO</label>
-              <input className="cyber-input" value={perfil.fechaNacimiento}
-                onChange={e => update('perfil', 'fechaNacimiento', e.target.value)} />
+              <CyberDatePicker
+                value={perfil.fechaNacimiento}
+                onChange={val => update('perfil', 'fechaNacimiento', val)}
+              />
             </div>
           </div>
 
           {/* Fila 3: Biometría */}
           <div className="field-row field-row--3">
             <div className="field-group">
-              <label className="hud-label">ESTATURA</label>
-              <input className="cyber-input" value={perfil.estatura}
-                onChange={e => update('perfil', 'estatura', e.target.value)} />
+              <label className="hud-label">ESTATURA (CM)</label>
+              <input className="cyber-input" type="text" inputMode="numeric" pattern="[0-9]*" value={perfil.estatura}
+                onChange={e => update('perfil', 'estatura', e.target.value.replace(/\D/g, ''))} />
             </div>
             <div className="field-group">
-              <label className="hud-label">PESO</label>
-              <input className="cyber-input" value={perfil.peso}
-                onChange={e => update('perfil', 'peso', e.target.value)} />
+              <label className="hud-label">PESO (KG)</label>
+              <input className="cyber-input" type="text" inputMode="numeric" pattern="[0-9]*" value={perfil.peso}
+                onChange={e => update('perfil', 'peso', e.target.value.replace(/\D/g, ''))} />
             </div>
             <div className="field-group">
               <label className="hud-label">CONTEXTURA</label>
@@ -178,17 +181,10 @@ export default function TabPerfil({ data, update }) {
                 <input className="cyber-input" value={perfil.residencia}
                   onChange={e => update('perfil', 'residencia', e.target.value)} />
               </div>
-              <div className="field-row field-row--2">
-                <div className="field-group">
-                  <label className="hud-label">ESTADO CIVIL</label>
-                  <input className="cyber-input" value={perfil.estadoCivil}
-                    onChange={e => update('perfil', 'estadoCivil', e.target.value)} />
-                </div>
-                <div className="field-group">
-                  <label className="hud-label">OFICIO</label>
-                  <input className="cyber-input" value={perfil.oficio}
-                    onChange={e => update('perfil', 'oficio', e.target.value)} />
-                </div>
+              <div className="field-group">
+                <label className="hud-label">ESTADO CIVIL</label>
+                <input className="cyber-input" value={perfil.estadoCivil}
+                  onChange={e => update('perfil', 'estadoCivil', e.target.value)} />
               </div>
             </div>
           </div>
@@ -333,20 +329,42 @@ export default function TabPerfil({ data, update }) {
               display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr 28px', gap: '1rem', alignItems: 'end',
               padding: '1rem', background: 'rgba(255,159,67,0.02)', borderLeft: '2px solid var(--neon-amber)'
             }}>
-              {[ ['NOMBRE', 'nombre'], ['CLAN', 'clan'], ['VÍNCULO', 'tipo'], ['FACCIÓN', 'faccion'] ].map(([label, k]) => (
-                <div key={k} className="field-group">
-                  <label className="hud-label" style={{ fontSize: '0.5rem' }}>{label}</label>
-                  <input className="cyber-input cyber-input--sm" value={con[k]}
-                    onChange={e => { const next = [...conexiones]; next[idx] = { ...next[idx], [k]: e.target.value }; update('conexiones', null, next); }} />
-                </div>
-              ))}
+              <div className="field-group">
+                <label className="hud-label" style={{ fontSize: '0.5rem' }}>NOMBRE</label>
+                <input className="cyber-input cyber-input--sm" value={con.nombre}
+                  onChange={e => { const next = [...conexiones]; next[idx] = { ...next[idx], nombre: e.target.value }; update('conexiones', null, next); }} />
+              </div>
+              <div className="field-group">
+                <label className="hud-label" style={{ fontSize: '0.5rem' }}>FACCIÓN</label>
+                <select className="cyber-select" value={con.faccion}
+                  onChange={e => { const next = [...conexiones]; next[idx] = { ...next[idx], faccion: e.target.value, clan: '' }; update('conexiones', null, next); }}>
+                  <option value="">[ FACCIÓN ]</option>
+                  {FACCIONES_VALIDAS.map(f => <option key={f} value={f}>{f}</option>)}
+                </select>
+              </div>
+              <div className="field-group">
+                <label className="hud-label" style={{ fontSize: '0.5rem' }}>CLAN</label>
+                <select className="cyber-select" value={con.clan}
+                  onChange={e => { const next = [...conexiones]; next[idx] = { ...next[idx], clan: e.target.value }; update('conexiones', null, next); }}
+                  disabled={!con.faccion}>
+                  <option value="">[ CLAN ]</option>
+                  {con.faccion && (CLAN_MANIPULATIONS[con.faccion] || []).map(c => (
+                    <option key={c.category} value={c.category}>{c.category}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="field-group">
+                <label className="hud-label" style={{ fontSize: '0.5rem' }}>VÍNCULO</label>
+                <input className="cyber-input cyber-input--sm" value={con.tipo}
+                  onChange={e => { const next = [...conexiones]; next[idx] = { ...next[idx], tipo: e.target.value }; update('conexiones', null, next); }} />
+              </div>
               <button className="dynamic-list__remove" style={{ paddingBottom: '8px' }}
                 onClick={() => update('conexiones', null, conexiones.filter((_, i) => i !== idx))}>×</button>
             </div>
           ))}
         </div>
         <button className="cyber-button cyber-button--add cyber-button--add-amber"
-          onClick={() => update('conexiones', null, [...conexiones, { nombre: '', clan: '', tipo: '', faccion: '' }])}>
+          onClick={() => update('conexiones', null, [...conexiones, { nombre: '', faccion: '', clan: '', tipo: '' }])}>
           + ESTABLECER CONEXIÓN
         </button>
       </Section>
@@ -358,8 +376,8 @@ export default function TabPerfil({ data, update }) {
             <tr>
               <th>NOMBRE</th>
               <th style={{ width: '180px' }}>TIPO DE BIEN</th>
-              <th style={{ width: '130px' }}>ENTRADA</th>
-              <th style={{ width: '130px' }}>SALIDA</th>
+              <th style={{ width: '130px' }}>INGRESO</th>
+              <th style={{ width: '130px' }}>EGRESO</th>
               <th style={{ width: '32px' }}></th>
             </tr>
           </thead>
@@ -381,11 +399,11 @@ export default function TabPerfil({ data, update }) {
                   </select>
                 </td>
                 <td>
-                  <input className="cyber-input cyber-input--sm" placeholder="0" value={reg.ingreso}
+                  <input className="cyber-input cyber-input--sm" type="number" min="0" placeholder="0" value={reg.ingreso}
                     onChange={e => { const next = [...economia.registros]; next[idx] = { ...next[idx], ingreso: e.target.value }; update('economia', 'registros', next); }} />
                 </td>
                 <td>
-                  <input className="cyber-input cyber-input--sm" style={{ color: 'var(--neon-magenta)' }} placeholder="0" value={reg.egreso}
+                  <input className="cyber-input cyber-input--sm" type="number" min="0" style={{ color: 'var(--neon-magenta)' }} placeholder="0" value={reg.egreso}
                     onChange={e => { const next = [...economia.registros]; next[idx] = { ...next[idx], egreso: e.target.value }; update('economia', 'registros', next); }} />
                 </td>
                 <td>
@@ -409,9 +427,9 @@ export default function TabPerfil({ data, update }) {
             </span>
           </div>
           <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: 'var(--text-dim)', paddingLeft: '4px' }}>
-            FLUJO ENTRADA: <span style={{ color: 'var(--neon-green)' }}>{totalIngresos} MP</span>
+            TOTAL INGRESOS: <span style={{ color: 'var(--neon-green)' }}>{totalIngresos} MP</span>
             &nbsp;&nbsp;·&nbsp;&nbsp;
-            FLUJO SALIDA: <span style={{ color: 'var(--neon-magenta)' }}>{totalEgresos} MP</span>
+            TOTAL EGRESOS: <span style={{ color: 'var(--neon-magenta)' }}>{totalEgresos} MP</span>
           </div>
         </div>
       </Section>
