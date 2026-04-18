@@ -179,7 +179,7 @@ export default function CharacterSheet({ characterData, onEdit, onBack }) {
               <div style={{ flex: 1 }}>
                 <div className="hud-label hud-label--cyan" style={{ marginBottom: '0.8rem' }}>ATRIBUTOS</div>
                 {Object.entries(d.atributos || {}).map(([k, s]) => (
-                  <div key={k} className="stat-row" style={{ marginBottom: '0.5rem' }}>
+                  <div key={k} style={{ display: 'grid', gridTemplateColumns: '130px max-content', alignItems: 'center', marginBottom: '0.5rem' }}>
                     <span style={{ fontSize: '0.65rem', opacity: 0.8 }}>{ATTR_LABELS[k] || k}</span>
                     <StatDiamond value={s?.val || 0} blockedBits={s?.blocked || 0} max={5} readOnly />
                   </div>
@@ -188,7 +188,7 @@ export default function CharacterSheet({ characterData, onEdit, onBack }) {
               <div style={{ flex: 1 }}>
                 <div className="hud-label hud-label--magenta" style={{ marginBottom: '0.8rem' }}>DONES</div>
                 {Object.entries(d.dones || {}).map(([k, s]) => (
-                  <div key={k} className="stat-row" style={{ marginBottom: '0.5rem' }}>
+                  <div key={k} style={{ display: 'grid', gridTemplateColumns: '130px max-content', alignItems: 'center', marginBottom: '0.5rem' }}>
                     <span style={{ fontSize: '0.65rem', opacity: 0.8 }}>{DONES_LABELS[k] || k}</span>
                     <StatDiamond value={s?.val || 0} blockedBits={s?.blocked || 0} max={2} readOnly />
                   </div>
@@ -204,27 +204,25 @@ export default function CharacterSheet({ characterData, onEdit, onBack }) {
               <div style={{ flex: 1 }}>
                 {/* Vigor */}
                 <div style={{ marginBottom: '1.5rem' }}>
-                  <div className="hud-label" style={{ marginBottom: '4px', paddingLeft: '40px' }}>VIGOR</div>
-                  <div style={{ display: 'flex', gap: '0.8rem' }}>
-                    <div style={{ width: '40px' }} />
-                    <SquareStat value={ev.vigor || 0} max={20} rows={2} markers={[1,2,3]} readOnly />
+                  <div style={{ display: 'grid', gridTemplateColumns: '130px max-content', alignItems: 'center' }}>
+                    <div className="hud-label" style={{ marginBottom: 0 }}>VIGOR</div>
+                    <SquareStat value={ev.vigor || 0} max={20} rows={2} readOnly />
                   </div>
                 </div>
                 {/* Constitución */}
                 <div style={{ marginBottom: '1.5rem' }}>
-                  <div className="hud-label" style={{ marginBottom: '4px', paddingLeft: '40px' }}>CONSTITUCIÓN</div>
-                  <div style={{ display: 'flex', gap: '0.8rem' }}>
-                    <div style={{ width: '40px' }} />
-                    <SquareStat value={ev.constitucion || 0} max={10} rows={1} markers={[1,2,3]} readOnly />
+                  <div style={{ display: 'grid', gridTemplateColumns: '130px max-content', alignItems: 'center' }}>
+                    <div className="hud-label" style={{ marginBottom: 0 }}>CONSTITUCIÓN</div>
+                    <SquareStat value={ev.constitucion || 0} max={10} rows={1} readOnly />
                   </div>
                 </div>
                 {/* Cordura */}
-                <div className="hud-label hud-label--cyan" style={{ marginBottom: '0.8rem', paddingLeft: '40px' }}>CORDURA</div>
+                <div className="hud-label hud-label--cyan" style={{ marginBottom: '0.8rem' }}>CORDURA</div>
                 {[1,2,3,4].map(nv => (
-                  <div key={nv} style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', marginBottom: '12px' }}>
-                    <span style={{ fontSize: '0.6rem', width: '40px', opacity: 0.5, fontFamily: 'var(--font-mono)' }}>Nv {nv}</span>
-                    <SquareStat value={ev.cordura?.[`nv${nv}`] || 0} max={5} rows={1} markers={nv===1?[1,2,3]:[]} readOnly />
-                    <span style={{ fontSize: '0.65rem', width: '25px', textAlign: 'center', fontWeight: 'bold' }}>{nv * 5}</span>
+                  <div key={nv} style={{ display: 'grid', gridTemplateColumns: 'minmax(130px, 130px) max-content 25px 1fr', alignItems: 'center', gap: '0.8rem', marginBottom: '12px' }}>
+                    <span style={{ fontSize: '0.6rem', opacity: 0.5, fontFamily: 'var(--font-mono)' }}>Nv {nv}</span>
+                    <SquareStat value={ev.cordura?.[`nv${nv}`] || 0} max={5} rows={1} readOnly />
+                    <span style={{ fontSize: '0.65rem', textAlign: 'center', fontWeight: 'bold' }}>{nv * 5}</span>
                     <span style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.5)', minWidth: '55px' }}>{ev.corduraNotas?.[`nv${nv}`] || '---'}</span>
                   </div>
                 ))}
@@ -235,7 +233,7 @@ export default function CharacterSheet({ characterData, onEdit, onBack }) {
                 <div className="glass-panel glass-panel--top-cyan" style={{ marginBottom: '0' }}>
                   <div className="hud-label hud-label--cyan" style={{ marginBottom: '0.8rem' }}>[ VIRTUDES ]</div>
                   {Object.entries(d.virtudes || {}).map(([k, s]) => (
-                    <div key={k} className="stat-row" style={{ marginBottom: '0.5rem' }}>
+                    <div key={k} style={{ display: 'grid', gridTemplateColumns: '130px max-content', alignItems: 'center', marginBottom: '0.5rem' }}>
                       <span style={{ fontSize: '0.65rem', opacity: 0.8 }}>{VIRT_LABELS[k]}</span>
                       <StatDiamond value={s?.val || 0} blockedBits={s?.blocked || 0} max={5} readOnly />
                     </div>
@@ -243,7 +241,10 @@ export default function CharacterSheet({ characterData, onEdit, onBack }) {
                 </div>
                 <div className="glass-panel glass-panel--top-cyan">
                   <div className="hud-label hud-label--cyan" style={{ marginBottom: '0.8rem' }}>[ VOLUNTAD ]</div>
-                  <SquareStat value={ev.voluntad || 0} max={10} rows={1} readOnly />
+                  <div style={{ display: 'grid', gridTemplateColumns: '130px max-content', alignItems: 'center' }}>
+                    <div />
+                    <SquareStat value={ev.voluntad || 0} max={10} rows={1} readOnly />
+                  </div>
                 </div>
               </div>
             </div>
@@ -258,7 +259,7 @@ export default function CharacterSheet({ characterData, onEdit, onBack }) {
                 .map(([k, v]) => (
                   <div key={k} className="stat-row" style={{ marginBottom: '4px' }}>
                     <span style={{ fontSize: '0.7rem' }}>{k}</span>
-                    <StatDiamond value={v?.val || 0} max={4} readOnly />
+                    <StatDiamond value={v?.val || 0} max={3} readOnly />
                   </div>
                 ))}
             </div>

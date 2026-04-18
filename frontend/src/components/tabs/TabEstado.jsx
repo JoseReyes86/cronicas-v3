@@ -42,8 +42,8 @@ export default function TabEstado({ data, update }) {
     const removeHab = (i) => update('virtudes', key, { ...stat, habilidades: habs.filter((_, idx) => idx !== i) });
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
-          <span className="stat-row__label" style={{ minWidth: '80px', width: 'auto' }}>{VIRT_LABELS[key]}</span>
+        <div style={{ display: 'grid', gridTemplateColumns: '130px max-content', alignItems: 'center', gap: '1rem' }}>
+          <span className="stat-row__label" style={{ minWidth: 'auto', width: 'auto' }}>{VIRT_LABELS[key]}</span>
           <StatDiamond
             value={stat.val} blockedBits={stat.blocked} max={5}
             onChange={v => update('virtudes', key, { ...stat, val: v })}
@@ -177,9 +177,9 @@ export default function TabEstado({ data, update }) {
 
           {/* Fila 1: Vigor / Autocontrol */}
           <div className="order-ev">
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-              <span className="stat-row__label" style={{ minWidth: '80px' }}>VIGOR</span>
-              <SquareStat value={ev.vigor} max={20} rows={2} markers={[1, 2, 3]}
+            <div style={{ display: 'grid', gridTemplateColumns: '130px max-content', alignItems: 'center', gap: '1rem' }}>
+              <span className="stat-row__label" style={{ minWidth: 'auto' }}>VIGOR</span>
+              <SquareStat value={ev.vigor} max={20} rows={2}
                 scalar color="var(--neon-cyan)"
                 onChange={v => update('estados_vitales', 'vigor', v)} />
             </div>
@@ -190,9 +190,9 @@ export default function TabEstado({ data, update }) {
 
           {/* Fila 2: Constitución / Alerta */}
           <div className="order-ev">
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-              <span className="stat-row__label" style={{ minWidth: '80px' }}>CONSTITUCIÓN</span>
-              <SquareStat value={ev.constitucion} max={10} rows={1} markers={[1, 2, 3]}
+            <div style={{ display: 'grid', gridTemplateColumns: '130px max-content', alignItems: 'center', gap: '1rem' }}>
+              <span className="stat-row__label" style={{ minWidth: 'auto' }}>CONSTITUCIÓN</span>
+              <SquareStat value={ev.constitucion} max={10} rows={1}
                 scalar color="var(--neon-cyan)"
                 onChange={v => update('estados_vitales', 'constitucion', v)} />
             </div>
@@ -206,7 +206,7 @@ export default function TabEstado({ data, update }) {
             <div>
               <div style={{ 
                 display: 'grid', 
-                gridTemplateColumns: 'minmax(80px, 80px) max-content 40px', 
+                gridTemplateColumns: 'minmax(130px, 130px) max-content 40px', 
                 columnGap: '1rem', 
                 rowGap: '6px',
                 alignItems: 'end' 
@@ -228,7 +228,6 @@ export default function TabEstado({ data, update }) {
                     
                     <SquareStat
                       value={ev.cordura[`nv${nv}`]} max={5} rows={1}
-                      markers={nv === 1 ? [1, 2, 3] : []}
                       onChange={v => update('estados_vitales', `cordura.nv${nv}`, v)}
                     />
 
@@ -246,8 +245,8 @@ export default function TabEstado({ data, update }) {
               </div>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', paddingTop: '1.5rem', borderTop: '1px solid var(--glass-border)' }}>
-              <span className="stat-row__label" style={{ minWidth: '80px' }}>VOLUNTAD</span>
+            <div style={{ display: 'grid', gridTemplateColumns: '130px max-content', alignItems: 'center', gap: '1rem', paddingTop: '1.5rem', borderTop: '1px solid var(--glass-border)' }}>
+              <span className="stat-row__label" style={{ minWidth: 'auto' }}>VOLUNTAD</span>
               <SquareStat value={ev.voluntad} max={10} rows={1}
                 scalar color="var(--neon-cyan)"
                 onChange={v => update('estados_vitales', 'voluntad', v)} />

@@ -52,6 +52,7 @@ export default function TabArmamento({ data, update }) {
     ['armas',     'ARMAS'],
     ['armaduras', 'ARMADURA'],
     ['altaTech',  'ALTA TECH'],
+    ['mejoras',   'MEJORAS'],
   ];
 
   return (
@@ -343,6 +344,56 @@ export default function TabArmamento({ data, update }) {
         </div>
       )}
 
+      {/* ── MEJORAS ──────────────────────────────────────── */}
+      {subTab === 'mejoras' && (
+        <div className="form-section" style={{ animation: 'fade-up 0.4s ease both' }}>
+          <div className="form-grid--2">
+            {mejoras.map((item, idx) => (
+              <div key={idx} className="glass-panel" style={{ borderLeft: '2px solid var(--neon-cyan)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem', alignItems: 'center' }}>
+                  <span className="hud-label" style={{ marginBottom: 0 }}>
+                    {item.pieza ? item.pieza.toUpperCase() : `MEJORA 0${idx + 1}`}
+                  </span>
+                  <button className="dynamic-list__remove" onClick={() => update('mejoras', null, mejoras.filter((_, i) => i !== idx))}>×</button>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'minmax(100px, auto) 1fr auto auto', gap: '1rem', alignItems: 'center', marginBottom: '1rem' }}>
+                  <label className="hud-label" style={{ fontSize: '0.45rem', lineHeight: '1.2' }}>Pieza /<br/>Manipulación</label>
+                  <input className="cyber-input cyber-input--sm" value={item.pieza} placeholder="..."
+                    onChange={e => { const n = [...mejoras]; n[idx] = { ...n[idx], pieza: e.target.value }; update('mejoras', null, n); }} />
+                  
+                  <label className="hud-label" style={{ fontSize: '0.45rem', marginLeft: '0.5rem' }}>Nivel</label>
+                  <StatDiamond 
+                    value={item.nivel} 
+                    max={15} 
+                    rows={3} 
+                    scalar 
+                    color="var(--neon-cyan)"
+                    onChange={v => { const n = [...mejoras]; n[idx] = { ...n[idx], nivel: v }; update('mejoras', null, n); }} 
+                  />
+                </div>
+
+                <div className="field-group" style={{ marginBottom: '1rem' }}>
+                  <label className="hud-label" style={{ fontSize: '0.45rem' }}>Objetivo</label>
+                  <textarea className="cyber-input cyber-input--sm" value={item.objetivo} rows={2} placeholder="..." style={{ resize: 'none' }}
+                    onChange={e => { const n = [...mejoras]; n[idx] = { ...n[idx], objetivo: e.target.value }; update('mejoras', null, n); }} />
+                </div>
+
+                <div className="field-group">
+                  <label className="hud-label" style={{ fontSize: '0.45rem' }}>Valor</label>
+                  <textarea className="cyber-input cyber-input--sm" value={item.valor} rows={2} placeholder="..." style={{ resize: 'none' }}
+                    onChange={e => { const n = [...mejoras]; n[idx] = { ...n[idx], valor: e.target.value }; update('mejoras', null, n); }} />
+                </div>
+
+              </div>
+            ))}
+          </div>
+          <button className="cyber-button cyber-button--add cyber-button--add-cyan"
+            onClick={() => update('mejoras', null, [...mejoras, DEFAULT_MEJORA()])}>
+            + AGREGAR MEJORA
+          </button>
+        </div>
+      )}
 
     </div>
   );

@@ -13,7 +13,7 @@ import React from 'react';
  *   firstLocked {bool}    primer rombo siempre activo, no interactuable
  *   lastDashed  {bool}    último rombo con borde punteado
  */
-export default function StatDiamond({ value = 0, blockedBits = 0, max = 5, onChange, onToggleBlock, readOnly = false, firstLocked = false, lastDashed = false, color, scalar = false }) {
+export default function StatDiamond({ value = 0, blockedBits = 0, max = 5, rows = 1, onChange, onToggleBlock, readOnly = false, firstLocked = false, lastDashed = false, color, scalar = false }) {
   const [lastValue, setLastValue] = React.useState(value);
   const [changedIdx, setChangedIdx] = React.useState(null);
 
@@ -54,42 +54,53 @@ export default function StatDiamond({ value = 0, blockedBits = 0, max = 5, onCha
     }
   };
 
+  const diamonds = Array.from({ length: max }, (_, i) => {
+    const bit = 1 << i;
+    const isFirstLocked = firstLocked && i === 0;
+    const isLastDashed  = lastDashed && i === max - 1;
+    const filled  = isFirstLocked ? true : (value & bit) !== 0;
+    const blocked = !isFirstLocked && (blockedBits & bit) !== 0;
+
+    let cls = 'stat-diamond';
+    if (isFirstLocked)  cls += ' stat-diamond--locked';
+    else if (blocked)   cls += ' stat-diamond--blocked';
+    else if (filled)    cls += ' stat-diamond--filled';
+    if (isLastDashed)   cls += ' stat-diamond--dashed';
+    if (changedIdx === i) cls += ' just-changed';
+
+    const colorStyle = color && (filled || isFirstLocked) && !blocked ? {
+      background: color,
+      borderColor: color,
+      boxShadow: `0 0 10px ${color}b3, 0 0 20px ${color}4d`,
+      ...(isFirstLocked ? { cursor: 'default' } : {}),
+    } : isFirstLocked ? { cursor: 'default' } : undefined;
+
+    return (
+      <button
+        key={i}
+        className={cls}
+        onClick={(e) => handleClick(e, i)}
+        title={isFirstLocked ? 'Siempre activo' : blocked ? 'Bloqueado (shift+click para desbloquear)' : 'Click para activar / shift+click para bloquear'}
+        type="button"
+        style={colorStyle}
+      >
+        {blocked && <span className="stat-diamond__x">×</span>}
+      </button>
+    );
+  });
+
+  if (rows > 1) {
+    const perRow = Math.ceil(max / rows);
+    return (
+      <div style={{ display: 'grid', gridTemplateColumns: `repeat(${perRow}, max-content)`, gap: '6px' }} aria-label="stat diamonds grid">
+        {diamonds}
+      </div>
+    );
+  }
+
   return (
     <div className="stat-diamond-row" aria-label="stat diamonds">
-      {Array.from({ length: max }, (_, i) => {
-        const bit = 1 << i;
-        const isFirstLocked = firstLocked && i === 0;
-        const isLastDashed  = lastDashed && i === max - 1;
-        const filled  = isFirstLocked ? true : (value & bit) !== 0;
-        const blocked = !isFirstLocked && (blockedBits & bit) !== 0;
-
-        let cls = 'stat-diamond';
-        if (isFirstLocked)  cls += ' stat-diamond--locked';
-        else if (blocked)   cls += ' stat-diamond--blocked';
-        else if (filled)    cls += ' stat-diamond--filled';
-        if (isLastDashed)   cls += ' stat-diamond--dashed';
-        if (changedIdx === i) cls += ' just-changed';
-
-        const colorStyle = color && (filled || isFirstLocked) && !blocked ? {
-          background: color,
-          borderColor: color,
-          boxShadow: `0 0 10px ${color}b3, 0 0 20px ${color}4d`,
-          ...(isFirstLocked ? { cursor: 'default' } : {}),
-        } : isFirstLocked ? { cursor: 'default' } : undefined;
-
-        return (
-          <button
-            key={i}
-            className={cls}
-            onClick={(e) => handleClick(e, i)}
-            title={isFirstLocked ? 'Siempre activo' : blocked ? 'Bloqueado (shift+click para desbloquear)' : 'Click para activar / shift+click para bloquear'}
-            type="button"
-            style={colorStyle}
-          >
-            {blocked && <span className="stat-diamond__x">×</span>}
-          </button>
-        );
-      })}
+      {diamonds}
     </div>
   );
 }
