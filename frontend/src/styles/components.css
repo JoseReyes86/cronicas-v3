@@ -240,6 +240,18 @@
 .cyber-table tr:hover td:first-child { border-left-color: var(--neon-cyan); }
 .cyber-table tr:hover td:last-child  { border-right-color: var(--neon-cyan); }
 
+/* ── Wrapper para Tablas Responsivas (Swipable en móviles) ─── */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 1rem;
+  padding-bottom: 4px;
+}
+.table-responsive::-webkit-scrollbar { height: 4px; }
+.table-responsive::-webkit-scrollbar-thumb { background: rgba(0, 210, 255, 0.3); border-radius: 2px; }
+.table-responsive::-webkit-scrollbar-thumb:hover { background: var(--neon-cyan); }
+
 /* ── Tabs ────────────────────────────────────────────────────── */
 .tab-bar {
   display: flex;

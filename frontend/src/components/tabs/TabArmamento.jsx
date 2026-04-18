@@ -67,7 +67,7 @@ export default function TabArmamento({ data, update }) {
                   <span className="hud-label" style={{ marginBottom: 0 }}>REGISTRO ARMAMENTO 0{idx + 1}</span>
                   <button className="dynamic-list__remove" onClick={() => update('armas', null, armas.filter((_, i) => i !== idx))}>×</button>
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.8rem' }}>
+                <div className="field-row field-row--2" style={{ gap: '0.8rem' }}>
                   {ARMA_FIELDS.map(([label, key]) => (
                     <div key={key} className="field-group">
                       <label className="hud-label" style={{ fontSize: '0.45rem', opacity: 0.6 }}>{label}</label>
@@ -97,7 +97,7 @@ export default function TabArmamento({ data, update }) {
                   <span className="hud-label" style={{ marginBottom: 0 }}>REGISTRO PROTECCIÓN 0{idx + 1}</span>
                   <button className="dynamic-list__remove" onClick={() => update('armaduras', null, armaduras.filter((_, i) => i !== idx))}>×</button>
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.8rem' }}>
+                <div className="field-row field-row--2" style={{ gap: '0.8rem' }}>
                   {ARMADURA_FIELDS.map(([label, key]) => (
                     <div key={key} className="field-group">
                       <label className="hud-label" style={{ fontSize: '0.45rem', opacity: 0.6 }}>{label}</label>
@@ -153,7 +153,7 @@ export default function TabArmamento({ data, update }) {
                   ))}
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.8rem' }}>
+                <div className="field-row field-row--2" style={{ gap: '0.8rem' }}>
                   {[
                     ['EXTRAS', 'extras'],
                     ['RESTRICCIONES', 'restriccion'],

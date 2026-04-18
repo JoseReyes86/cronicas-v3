@@ -167,132 +167,126 @@ export default function TabEstado({ data, update }) {
         </div>
       </div>
 
-      {/* ── RESISTENCIA ────────────────────────────────────── */}
+      {/* ── RESISTENCIA & VIRTUDES ──────────────────────────── */}
       <div className="glass-panel" style={{ borderTop: '2px solid var(--neon-magenta)' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', columnGap: '3rem', marginBottom: '2rem' }}>
-          <div className="hud-label">ESTADOS VITALES &amp; RESISTENCIA</div>
-          <div className="hud-label" style={{ paddingLeft: '2rem', borderLeft: '1px solid var(--glass-border)' }}>VIRTUDES</div>
-        </div>
+        <div className="resist-body">
+          {/* Columna Principal: ESTADOS VITALES */}
+          <div className="resist-main" style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
+            <div className="hud-label">ESTADOS VITALES &amp; RESISTENCIA</div>
+            
+            <div className="stat-row" style={{ alignItems: 'flex-start' }}>
+              <span className="stat-row__label" style={{ paddingTop: '6px' }}>VIGOR</span>
+              <SquareStat value={ev.vigor} max={20} rows={2} markers={[1, 2, 3]}
+                scalar color="var(--neon-cyan)"
+                onChange={v => update('estados_vitales', 'vigor', v)} />
+            </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', columnGap: '3rem', rowGap: '3rem' }}>
+            <div className="stat-row" style={{ alignItems: 'flex-start' }}>
+              <span className="stat-row__label" style={{ paddingTop: '6px' }}>CONSTITUCIÓN</span>
+              <SquareStat value={ev.constitucion} max={10} rows={1} markers={[1, 2, 3]}
+                scalar color="var(--neon-cyan)"
+                onChange={v => update('estados_vitales', 'constitucion', v)} />
+            </div>
 
-          {/* VIGOR | AUTOCONTROL */}
-          <div className="stat-row" style={{ alignItems: 'flex-start' }}>
-            <span className="stat-row__label" style={{ paddingTop: '6px' }}>VIGOR</span>
-            <SquareStat value={ev.vigor} max={20} rows={2} markers={[1, 2, 3]}
-              scalar color="var(--neon-cyan)"
-              onChange={v => update('estados_vitales', 'vigor', v)} />
-          </div>
-          <div style={{ paddingLeft: '2rem', borderLeft: '1px solid var(--glass-border)' }}>
-            {renderVirtud('autocontrol')}
-          </div>
+            <div>
+              <div style={{ 
+                display: 'grid', 
+                gridTemplateColumns: 'minmax(80px, 120px) max-content 40px', 
+                columnGap: '1rem', 
+                rowGap: '2px', // Espacio mínimo entre marcadores y cuadros
+                alignItems: 'center' 
+              }}>
+                <label className="hud-label" style={{ color: 'var(--neon-cyan)', marginBottom: '1rem', gridColumn: 'span 3' }}>CORDURA</label>
 
-          {/* CONSTITUCIÓN | ALERTA */}
-          <div className="stat-row" style={{ alignItems: 'flex-start' }}>
-            <span className="stat-row__label" style={{ paddingTop: '6px' }}>CONSTITUCIÓN</span>
-            <SquareStat value={ev.constitucion} max={10} rows={1} markers={[1, 2, 3]}
-              scalar color="var(--neon-cyan)"
-              onChange={v => update('estados_vitales', 'constitucion', v)} />
-          </div>
-          <div style={{ paddingLeft: '2rem', borderLeft: '1px solid var(--glass-border)' }}>
-            {renderVirtud('alerta')}
-          </div>
+                {[1, 2, 3, 4].map(nv => (
+                  <React.Fragment key={nv}>
+                    {/* FILA A: Marcadores (Solo si nv === 1) */}
+                    <div />
+                    <div style={{ paddingLeft: '2px', height: '26px', display: 'flex', alignItems: 'flex-start' }}>
+                      {nv === 1 && (
+                        <div style={{ 
+                          display: 'flex', 
+                          gap: '4px', 
+                          paddingLeft: '78px', 
+                          paddingTop: '2px'
+                        }}>
+                          {[0, 1, 2].map(mIdx => {
+                            const isActive = (ev.cordura.nv1 & (1 << (10 + mIdx))) !== 0;
+                            return (
+                              <button 
+                                key={mIdx} 
+                                type="button"
+                                onClick={() => {
+                                  const current = ev.cordura.nv1;
+                                  update('estados_vitales', 'cordura.nv1', current ^ (1 << (10 + mIdx)));
+                                }}
+                                className={`square-stat__marker ${isActive ? 'square-stat__marker--active' : ''}`} 
+                                style={{ width: '22px', height: '22px', fontSize: '0.6rem' }}
+                              >
+                                {mIdx + 1}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                    <div />
 
-          {/* CORDURA | VALENTÍA */}
-          <div>
-            <div style={{ 
-              display: 'grid', 
-              gridTemplateColumns: '120px max-content 40px', 
-              columnGap: '1.5rem', 
-              rowGap: '2px', // Espacio mínimo entre marcadores y cuadros
-              alignItems: 'center' 
-            }}>
-              {/* Header */}
-              <label className="hud-label" style={{ color: 'var(--neon-cyan)', marginBottom: '1rem', gridColumn: 'span 3' }}>CORDURA</label>
-
-              {[1, 2, 3, 4].map(nv => (
-                <React.Fragment key={nv}>
-                  {/* FILA A: Marcadores (Solo si nv === 1) */}
-                  <div />
-                  <div style={{ paddingLeft: '2px', height: '26px', display: 'flex', alignItems: 'flex-start' }}>
-                    {nv === 1 && (
-                      <div style={{ 
-                        display: 'flex', 
-                        gap: '4px', 
-                        paddingLeft: '78px', 
-                        paddingTop: '2px'
-                      }}>
-                        {[0, 1, 2].map(mIdx => {
-                          const isActive = (ev.cordura.nv1 & (1 << (10 + mIdx))) !== 0;
-                          return (
-                            <button 
-                              key={mIdx} 
-                              type="button"
-                              onClick={() => {
-                                const current = ev.cordura.nv1;
-                                update('estados_vitales', 'cordura.nv1', current ^ (1 << (10 + mIdx)));
-                              }}
-                              className={`square-stat__marker ${isActive ? 'square-stat__marker--active' : ''}`} 
-                              style={{ width: '22px', height: '22px', fontSize: '0.6rem' }}
-                            >
-                              {mIdx + 1}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    )}
-                  </div>
-                  <div />
-
-                  {/* FILA B: Datos principales (Etiqueta | Cuadros | Valor) */}
-                  <span style={{ 
-                    fontFamily: 'var(--font-mono)', 
-                    fontSize: '0.75rem', 
-                    color: 'var(--text-dim)', 
-                    fontWeight: 600,
-                    letterSpacing: '1px',
-                    height: '32px',
-                    display: 'flex',
-                    alignItems: 'center'
-                  }}>
-                    NV 0{nv}
-                  </span>
-                  
-                  <div style={{ height: '32px', display: 'flex', alignItems: 'center' }}>
-                    <SquareStat
-                      value={ev.cordura[`nv${nv}`]} max={5} rows={1}
-                      onChange={v => update('estados_vitales', `cordura.nv${nv}`, v)}
-                    />
-                  </div>
-
-                  <div style={{ height: '32px', display: 'flex', alignItems: 'center', paddingLeft: '0.5rem' }}>
+                    {/* FILA B: Datos principales (Etiqueta | Cuadros | Valor) */}
                     <span style={{ 
                       fontFamily: 'var(--font-mono)', 
-                      fontSize: '0.9rem', 
-                      color: 'var(--neon-cyan)',
-                      fontWeight: 'bold'
+                      fontSize: '0.75rem', 
+                      color: 'var(--text-dim)', 
+                      fontWeight: 600,
+                      letterSpacing: '1px',
+                      height: '32px',
+                      display: 'flex',
+                      alignItems: 'center'
                     }}>
-                      {nv * 5}
+                      NV 0{nv}
                     </span>
-                  </div>
+                    
+                    <div style={{ height: '32px', display: 'flex', alignItems: 'center' }}>
+                      <SquareStat
+                        value={ev.cordura[`nv${nv}`]} max={5} rows={1}
+                        onChange={v => update('estados_vitales', `cordura.nv${nv}`, v)}
+                      />
+                    </div>
 
-                  {/* Espacio entre niveles */}
-                  <div style={{ height: '8px', gridColumn: 'span 3' }} />
-                </React.Fragment>
-              ))}
+                    <div style={{ height: '32px', display: 'flex', alignItems: 'center', paddingLeft: '0.5rem' }}>
+                      <span style={{ 
+                        fontFamily: 'var(--font-mono)', 
+                        fontSize: '0.9rem', 
+                        color: 'var(--neon-cyan)',
+                        fontWeight: 'bold'
+                      }}>
+                        {nv * 5}
+                      </span>
+                    </div>
+
+                    {/* Espacio entre niveles */}
+                    <div style={{ height: '8px', gridColumn: 'span 3' }} />
+                  </React.Fragment>
+                ))}
+              </div>
+            </div>
+
+            <div className="stat-row" style={{ paddingTop: '1rem', borderTop: '1px solid var(--glass-border)' }}>
+              <span className="stat-row__label">VOLUNTAD</span>
+              <SquareStat value={ev.voluntad} max={10} rows={1}
+                scalar color="var(--neon-cyan)"
+                onChange={v => update('estados_vitales', 'voluntad', v)} />
             </div>
           </div>
-          <div style={{ paddingLeft: '2rem', borderLeft: '1px solid var(--glass-border)' }}>
+
+          {/* Columna Lateral: VIRTUDES */}
+          <div className="resist-side" style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
+            <div className="hud-label">VIRTUDES</div>
+            {renderVirtud('autocontrol')}
+            {renderVirtud('alerta')}
             {renderVirtud('valentia')}
           </div>
 
-        </div>
-
-        <div className="stat-row" style={{ marginTop: '3rem', paddingTop: '2rem', borderTop: '1px solid var(--glass-border)' }}>
-          <span className="stat-row__label">VOLUNTAD</span>
-          <SquareStat value={ev.voluntad} max={10} rows={1}
-            scalar color="var(--neon-cyan)"
-            onChange={v => update('estados_vitales', 'voluntad', v)} />
         </div>
       </div>
 
@@ -300,57 +294,59 @@ export default function TabEstado({ data, update }) {
       <div className="glass-panel">
         <div className="hud-label" style={{ marginBottom: '1.5rem' }}>ARTES DE COMBATE</div>
 
-        <table className="cyber-table">
-          <thead>
-            <tr>
-              <th>ARTE DE COMBATE</th>
-              <th style={{ width: '150px' }}>DON</th>
-              <th style={{ width: '80px' }}>NIVEL</th>
-              <th>M 01</th>
-              <th>M 02</th>
-              <th>M 03</th>
-              <th style={{ width: '40px' }}>V</th>
-            </tr>
-          </thead>
-          <tbody>
-            {combate.artesDeCombate.map((arte, idx) => (
-              <tr key={idx}>
-                <td>
-                  <input className="cyber-input cyber-input--sm" placeholder="Definir arte..." value={arte.nombre}
-                    onChange={e => { const next = [...combate.artesDeCombate]; next[idx] = { ...next[idx], nombre: e.target.value }; update('combate', 'artesDeCombate', next); }} />
-                </td>
-                <td>
-                  <select className="cyber-select" value={arte.subtipo}
-                    onChange={e => { const next = [...combate.artesDeCombate]; next[idx] = { ...next[idx], subtipo: e.target.value }; update('combate', 'artesDeCombate', next); }}>
-                    <option value="">SIN PROCESADOR</option>
-                    {Object.entries(DONES_LABELS).map(([k, label]) => (
-                      <option key={k} value={k}>{label}</option>
-                    ))}
-                  </select>
-                </td>
-                <td>
-                  <SquareStat value={arte.nv} max={2} rows={1}
-                    onChange={v => { const next = [...combate.artesDeCombate]; next[idx] = { ...next[idx], nv: v }; update('combate', 'artesDeCombate', next); }} />
-                </td>
-                {/* Maestria 1, 2, 3 */}
-                {[0, 1, 2].map(m => (
-                  <td key={m}>
-                    <input className="cyber-input cyber-input--sm" placeholder={`M 0${m+1}`}
-                      value={combate.maestrias[idx * 4 + m] || ''}
-                      onChange={e => { const next = [...combate.maestrias]; next[idx * 4 + m] = e.target.value; update('combate', 'maestrias', next); }} />
-                  </td>
-                ))}
-                {/* Validador */}
-                <td>
-                  <SquareStat 
-                    value={Number(combate.maestrias[idx * 4 + 3]) || 0} 
-                    max={1} rows={1}
-                    onChange={v => { const next = [...combate.maestrias]; next[idx * 4 + 3] = v; update('combate', 'maestrias', next); }} />
-                </td>
+        <div className="table-responsive">
+          <table className="cyber-table">
+            <thead>
+              <tr>
+                <th>ARTE DE COMBATE</th>
+                <th style={{ width: '150px' }}>DON</th>
+                <th style={{ width: '80px' }}>NIVEL</th>
+                <th>M 01</th>
+                <th>M 02</th>
+                <th>M 03</th>
+                <th style={{ width: '40px' }}>V</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {combate.artesDeCombate.map((arte, idx) => (
+                <tr key={idx}>
+                  <td>
+                    <input className="cyber-input cyber-input--sm" placeholder="Definir arte..." value={arte.nombre}
+                      onChange={e => { const next = [...combate.artesDeCombate]; next[idx] = { ...next[idx], nombre: e.target.value }; update('combate', 'artesDeCombate', next); }} />
+                  </td>
+                  <td>
+                    <select className="cyber-select" value={arte.subtipo}
+                      onChange={e => { const next = [...combate.artesDeCombate]; next[idx] = { ...next[idx], subtipo: e.target.value }; update('combate', 'artesDeCombate', next); }}>
+                      <option value="">SIN PROCESADOR</option>
+                      {Object.entries(DONES_LABELS).map(([k, label]) => (
+                        <option key={k} value={k}>{label}</option>
+                      ))}
+                    </select>
+                  </td>
+                  <td>
+                    <SquareStat value={arte.nv} max={2} rows={1}
+                      onChange={v => { const next = [...combate.artesDeCombate]; next[idx] = { ...next[idx], nv: v }; update('combate', 'artesDeCombate', next); }} />
+                  </td>
+                  {/* Maestria 1, 2, 3 */}
+                  {[0, 1, 2].map(m => (
+                    <td key={m}>
+                      <input className="cyber-input cyber-input--sm" placeholder={`M 0${m+1}`}
+                        value={combate.maestrias[idx * 4 + m] || ''}
+                        onChange={e => { const next = [...combate.maestrias]; next[idx * 4 + m] = e.target.value; update('combate', 'maestrias', next); }} />
+                    </td>
+                  ))}
+                  {/* Validador */}
+                  <td>
+                    <SquareStat 
+                      value={Number(combate.maestrias[idx * 4 + 3]) || 0} 
+                      max={1} rows={1}
+                      onChange={v => { const next = [...combate.maestrias]; next[idx * 4 + 3] = v; update('combate', 'maestrias', next); }} />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
       </div>
 
