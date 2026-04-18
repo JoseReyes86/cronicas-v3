@@ -423,13 +423,13 @@ export default function TabPerfil({ data, update }) {
           <div className="glass-panel" style={{ padding: '0.8rem 1.5rem', border: '1px solid rgba(8, 247, 206, 0.3)', background: 'rgba(8,247,206,0.05)', maxWidth: 'fit-content' }}>
             <span className="hud-label" style={{ display: 'inline', marginRight: '1rem', marginBottom: 0 }}>BALANCE:</span>
             <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 'bold', color: balance >= 0 ? 'var(--neon-green)' : 'var(--neon-magenta)', fontSize: '1.2rem' }}>
-              {balance} MP
+              {balance} CLP
             </span>
           </div>
           <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: 'var(--text-dim)', paddingLeft: '4px' }}>
-            TOTAL INGRESOS: <span style={{ color: 'var(--neon-green)' }}>{totalIngresos} MP</span>
+            TOTAL INGRESOS: <span style={{ color: 'var(--neon-green)' }}>{totalIngresos} CLP</span>
             &nbsp;&nbsp;·&nbsp;&nbsp;
-            TOTAL EGRESOS: <span style={{ color: 'var(--neon-magenta)' }}>{totalEgresos} MP</span>
+            TOTAL EGRESOS: <span style={{ color: 'var(--neon-magenta)' }}>{totalEgresos} CLP</span>
           </div>
         </div>
       </Section>
