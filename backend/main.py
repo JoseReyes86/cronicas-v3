@@ -35,6 +35,16 @@ def startup():
     init_db()
 
 
+# ── Fórmula: Capacidad de Carga ───────────────────────────────────────────────
+# Base 20 pts (casilla 1 siempre marcada). Cada atributo con val >= 3 suma
+# 10 pts y marca 1 casilla adicional. Máximo 8 casillas (StatDiamond max=8).
+def compute_capacidad_carga(data: dict) -> int:
+    atributos = data.get("atributos", {})
+    n = sum(1 for stat in atributos.values() if isinstance(stat, dict) and bin(stat.get("val", 0)).count('1') >= 3)
+    boxes = min(1 + n, 10)
+    return (1 << boxes) - 1
+
+
 # ── Auth helpers ──────────────────────────────────────────────────────────────
 def hash_password(plain: str) -> str:
     return pwd_ctx.hash(plain)
@@ -116,10 +126,12 @@ def list_characters(user_id: int = Depends(get_current_user)):
 
 @app.post("/api/characters", status_code=201)
 def create_character(req: CharacterRequest, user_id: int = Depends(get_current_user)):
+    data = req.data
+    data["capacidadCarga"] = compute_capacidad_carga(data)
     db = get_db()
     cur = db.execute(
         "INSERT INTO characters (user_id, name, data) VALUES (?, ?, ?)",
-        (user_id, req.name, json.dumps(req.data))
+        (user_id, req.name, json.dumps(data))
     )
     db.commit()
     row = db.execute("SELECT id, name, data, created_at, updated_at FROM characters WHERE id = ?", (cur.lastrowid,)).fetchone()
@@ -130,13 +142,15 @@ def create_character(req: CharacterRequest, user_id: int = Depends(get_current_u
 
 @app.put("/api/characters/{char_id}")
 def update_character(char_id: int, req: CharacterRequest, user_id: int = Depends(get_current_user)):
+    data = req.data
+    data["capacidadCarga"] = compute_capacidad_carga(data)
     db = get_db()
     row = db.execute("SELECT id FROM characters WHERE id = ? AND user_id = ?", (char_id, user_id)).fetchone()
     if not row:
         raise HTTPException(status_code=404, detail="Personaje no encontrado")
     db.execute(
         "UPDATE characters SET name = ?, data = ?, updated_at = datetime('now') WHERE id = ?",
-        (req.name, json.dumps(req.data), char_id)
+        (req.name, json.dumps(data), char_id)
     )
     db.commit()
     row = db.execute("SELECT id, name, data, created_at, updated_at FROM characters WHERE id = ?", (char_id,)).fetchone()

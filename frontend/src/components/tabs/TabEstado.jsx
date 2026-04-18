@@ -21,15 +21,27 @@ const VIRT_LABELS = {
 const popCount = n => { let c = 0, v = n >>> 0; while (v) { c += v & 1; v >>>= 1; } return c; };
 
 export default function TabEstado({ data, update }) {
-  const { atributos, dones, virtudes, estados_vitales: ev, metapsicosis, capacidadCarga, combate } = data;
+  const { atributos, dones, virtudes, estados_vitales: ev, metapsicosis, combate } = data;
 
   const updateStat = (section, key, val, blocked) =>
     update(section, key, { val, blocked });
 
+  const atrsGe3 = Object.values(atributos).filter(s => popCount(s?.val || 0) >= 3).length;
+  const cargaBoxes = Math.min(1 + atrsGe3, 10);
+  const capacidadCarga = (1 << cargaBoxes) - 1;
+  const cargaKg = 10 + cargaBoxes * 10;
+
   const renderVirtud = (key) => {
     const stat = virtudes[key];
+    const habs = stat.habilidades || [];
+    const addHab = () => update('virtudes', key, { ...stat, habilidades: [...habs, { habilidad: '', cd: '', costo: '' }] });
+    const updateHab = (i, field, val) => {
+      const next = habs.map((h, idx) => idx === i ? { ...h, [field]: val } : h);
+      update('virtudes', key, { ...stat, habilidades: next });
+    };
+    const removeHab = (i) => update('virtudes', key, { ...stat, habilidades: habs.filter((_, idx) => idx !== i) });
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
         <div className="stat-row">
           <span className="stat-row__label">{VIRT_LABELS[key]}</span>
           <StatDiamond
@@ -38,18 +50,29 @@ export default function TabEstado({ data, update }) {
             onToggleBlock={b => update('virtudes', key, { ...stat, blocked: b })}
           />
         </div>
-        <div className="field-row field-row--2">
-          <div className="field-group">
-            <label className="hud-label" style={{ fontSize: '0.55rem' }}>CD</label>
-            <input className="cyber-input cyber-input--sm" value={stat.cd}
-              onChange={e => update('virtudes', key, { ...stat, cd: e.target.value })} />
+        {habs.length > 0 && (
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 60px 60px 18px', gap: '4px', alignItems: 'center' }}>
+            <span className="hud-label" style={{ fontSize: '0.45rem', marginBottom: 0 }}>HABILIDAD</span>
+            <span className="hud-label" style={{ fontSize: '0.45rem', marginBottom: 0 }}>CD</span>
+            <span className="hud-label" style={{ fontSize: '0.45rem', marginBottom: 0 }}>COSTO</span>
+            <span />
+            {habs.map((h, i) => (
+              <React.Fragment key={i}>
+                <input className="cyber-input cyber-input--sm" value={h.habilidad} placeholder="Habilidad..."
+                  onChange={e => updateHab(i, 'habilidad', e.target.value)} style={{ fontSize: '0.7rem', padding: '0.3rem 0.5rem' }} />
+                <input className="cyber-input cyber-input--sm" value={h.cd} placeholder="CD"
+                  onChange={e => updateHab(i, 'cd', e.target.value)} style={{ fontSize: '0.7rem', padding: '0.3rem 0.4rem' }} />
+                <input className="cyber-input cyber-input--sm" value={h.costo} placeholder="0"
+                  onChange={e => updateHab(i, 'costo', e.target.value)} style={{ fontSize: '0.7rem', padding: '0.3rem 0.4rem' }} />
+                <button className="dynamic-list__remove" onClick={() => removeHab(i)} style={{ fontSize: '0.7rem', lineHeight: 1 }}>×</button>
+              </React.Fragment>
+            ))}
           </div>
-          <div className="field-group">
-            <label className="hud-label" style={{ fontSize: '0.55rem' }}>COSTE</label>
-            <input className="cyber-input cyber-input--sm" value={stat.costo}
-              onChange={e => update('virtudes', key, { ...stat, costo: e.target.value })} />
-          </div>
-        </div>
+        )}
+        <button className="cyber-button cyber-button--add cyber-button--add-cyan"
+          onClick={addHab} style={{ fontSize: '0.55rem', padding: '0.3rem 0.8rem' }}>
+          + HABILIDAD
+        </button>
       </div>
     );
   };
@@ -57,58 +80,51 @@ export default function TabEstado({ data, update }) {
   return (
     <div className="form-section">
 
-      {/* ── METAPSICOSIS + CAPACIDAD DE CARGA ──────────────── */}
+      {/* ── CAPACIDAD DE CARGA + METAPSICOSIS ──────────────── */}
       <div className="form-grid--2">
         <div className="glass-panel">
-          <div className="hud-label" style={{ marginBottom: '1.2rem', color: 'var(--neon-cyan)' }}>[ METAPSICOSIS ]</div>
+          <div className="hud-label" style={{ marginBottom: '1.2rem', color: 'var(--neon-cyan)' }}>[ CAPACIDAD DE CARGA ]</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-            <StatDiamond value={metapsicosis} max={7} scalar onChange={v => update('metapsicosis', null, v)} />
-            <div className="field-group" style={{ 
-              borderLeft: '2px solid rgba(0, 255, 255, 0.2)', 
+            <StatDiamond value={capacidadCarga} max={10} scalar onChange={() => {}} />
+            <div className="field-group" style={{
+              borderLeft: '2px solid rgba(0, 255, 255, 0.2)',
               paddingLeft: '1.5rem',
               background: 'linear-gradient(90deg, rgba(0, 255, 255, 0.05) 0%, transparent 100%)'
             }}>
-              <label className="hud-label" style={{ fontSize: '0.5rem', opacity: 0.7 }}>CANTIDAD</label>
-              <div className="cyber-input cyber-input--sm" style={{ 
-                fontFamily: 'var(--font-mono)', 
-                fontSize: '1.3rem', 
+              <label className="hud-label" style={{ fontSize: '0.5rem', opacity: 0.7 }}>TAMAÑO</label>
+              <div className="cyber-input cyber-input--sm" style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: '1.3rem',
                 color: 'var(--neon-cyan)',
                 textShadow: '0 0 10px var(--neon-cyan)',
-                width: '60px',
+                width: '70px',
                 textAlign: 'center',
                 padding: '4px 0',
                 background: 'rgba(0,0,0,0.3)',
-                border: '1px solid rgba(0, 255, 255, 0.1)'
+                border: '1px solid rgba(0, 255, 255, 0.1)',
+                cursor: 'default'
               }}>
-                {popCount(metapsicosis)}
+                {cargaKg}
               </div>
             </div>
           </div>
         </div>
 
         <div className="glass-panel">
-          <div className="hud-label" style={{ marginBottom: '1.2rem', color: 'var(--neon-cyan)' }}>[ CAPACIDAD DE CARGA ]</div>
+          <div className="hud-label" style={{ marginBottom: '1.2rem', color: 'var(--neon-cyan)' }}>[ METAPSICOSIS ]</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-            <StatDiamond value={capacidadCarga} max={8} scalar onChange={v => update('capacidadCarga', null, v)} />
-            <div className="field-group" style={{ 
-              borderLeft: '2px solid rgba(0, 255, 255, 0.2)', 
+            <StatDiamond value={(1 << Math.min(Math.floor(metapsicosis / 10), 7)) - 1} max={7} readOnly />
+            <div className="field-group" style={{
+              borderLeft: '2px solid rgba(0, 255, 255, 0.2)',
               paddingLeft: '1.5rem',
               background: 'linear-gradient(90deg, rgba(0, 255, 255, 0.05) 0%, transparent 100%)'
             }}>
-              <label className="hud-label" style={{ fontSize: '0.5rem', opacity: 0.7 }}>CANTIDAD</label>
-              <div className="cyber-input cyber-input--sm" style={{ 
-                fontFamily: 'var(--font-mono)', 
-                fontSize: '1.3rem', 
-                color: 'var(--neon-cyan)',
-                textShadow: '0 0 10px var(--neon-cyan)',
-                width: '60px',
-                textAlign: 'center',
-                padding: '4px 0',
-                background: 'rgba(0,0,0,0.3)',
-                border: '1px solid rgba(0, 255, 255, 0.1)'
-              }}>
-                {popCount(capacidadCarga)}
-              </div>
+              <label className="hud-label" style={{ fontSize: '0.5rem', opacity: 0.7 }}>VALOR</label>
+              <input className="cyber-input cyber-input--sm" type="text" inputMode="numeric" pattern="[0-9]*"
+                value={metapsicosis}
+                onChange={e => update('metapsicosis', null, Number(e.target.value.replace(/\D/g, '')) || 0)}
+                style={{ fontFamily: 'var(--font-mono)', fontSize: '1.1rem', color: 'var(--neon-cyan)', width: '70px', textAlign: 'center' }}
+              />
             </div>
           </div>
         </div>
@@ -124,7 +140,6 @@ export default function TabEstado({ data, update }) {
                 <span className="stat-row__label">{ATTR_LABELS[key]}</span>
                 <StatDiamond
                   value={stat.val} blockedBits={stat.blocked} max={5}
-                  firstLocked lastDashed
                   scalar color="#ff0044"
                   onChange={v => updateStat('atributos', key, v, stat.blocked)}
                   onToggleBlock={b => updateStat('atributos', key, stat.val, b)}
@@ -154,15 +169,18 @@ export default function TabEstado({ data, update }) {
 
       {/* ── RESISTENCIA ────────────────────────────────────── */}
       <div className="glass-panel" style={{ borderTop: '2px solid var(--neon-magenta)' }}>
-        <div className="hud-label" style={{ marginBottom: '2rem' }}>ESTADOS VITALES &amp; RESISTENCIA</div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', columnGap: '3rem', marginBottom: '2rem' }}>
+          <div className="hud-label">ESTADOS VITALES &amp; RESISTENCIA</div>
+          <div className="hud-label" style={{ paddingLeft: '2rem', borderLeft: '1px solid var(--glass-border)' }}>VIRTUDES</div>
+        </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', columnGap: '3rem', rowGap: '3rem' }}>
 
           {/* VIGOR | AUTOCONTROL */}
-          <div style={{ display: 'flex', gap: '2rem', alignItems: 'flex-start' }}>
-            <label className="hud-label" style={{ minWidth: '120px', paddingTop: '6px' }}>VIGOR</label>
+          <div className="stat-row" style={{ alignItems: 'flex-start' }}>
+            <span className="stat-row__label" style={{ paddingTop: '6px' }}>VIGOR</span>
             <SquareStat value={ev.vigor} max={20} rows={2} markers={[1, 2, 3]}
-              scalar minLevel={7}
+              scalar color="var(--neon-cyan)"
               onChange={v => update('estados_vitales', 'vigor', v)} />
           </div>
           <div style={{ paddingLeft: '2rem', borderLeft: '1px solid var(--glass-border)' }}>
@@ -170,10 +188,10 @@ export default function TabEstado({ data, update }) {
           </div>
 
           {/* CONSTITUCIÓN | ALERTA */}
-          <div style={{ display: 'flex', gap: '2rem', alignItems: 'flex-start' }}>
-            <label className="hud-label" style={{ minWidth: '120px', paddingTop: '6px' }}>CONSTITUCIÓN</label>
+          <div className="stat-row" style={{ alignItems: 'flex-start' }}>
+            <span className="stat-row__label" style={{ paddingTop: '6px' }}>CONSTITUCIÓN</span>
             <SquareStat value={ev.constitucion} max={10} rows={1} markers={[1, 2, 3]}
-              scalar minLevel={6}
+              scalar color="var(--neon-cyan)"
               onChange={v => update('estados_vitales', 'constitucion', v)} />
           </div>
           <div style={{ paddingLeft: '2rem', borderLeft: '1px solid var(--glass-border)' }}>
@@ -243,7 +261,6 @@ export default function TabEstado({ data, update }) {
                   <div style={{ height: '32px', display: 'flex', alignItems: 'center' }}>
                     <SquareStat
                       value={ev.cordura[`nv${nv}`]} max={5} rows={1}
-                      scalar
                       onChange={v => update('estados_vitales', `cordura.nv${nv}`, v)}
                     />
                   </div>
@@ -271,9 +288,10 @@ export default function TabEstado({ data, update }) {
 
         </div>
 
-        <div style={{ display: 'flex', gap: '2rem', alignItems: 'center', marginTop: '3rem', paddingTop: '2rem', borderTop: '1px solid var(--glass-border)' }}>
-          <label className="hud-label" style={{ minWidth: '120px' }}>VOLUNTAD</label>
+        <div className="stat-row" style={{ marginTop: '3rem', paddingTop: '2rem', borderTop: '1px solid var(--glass-border)' }}>
+          <span className="stat-row__label">VOLUNTAD</span>
           <SquareStat value={ev.voluntad} max={10} rows={1}
+            scalar color="var(--neon-cyan)"
             onChange={v => update('estados_vitales', 'voluntad', v)} />
         </div>
       </div>

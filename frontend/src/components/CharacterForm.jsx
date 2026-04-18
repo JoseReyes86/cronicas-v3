@@ -29,7 +29,10 @@ const STATUS = {
 
 export default function CharacterForm({ characterId, initialData, onSave, onClose }) {
   const [data, setData]         = useState(() => mergeWithDefaults(initialData));
-  const [activeTab, setActiveTab] = useState('perfil');
+  const tabKey = `active_tab_${characterId}`;
+  const [activeTab, setActiveTab] = useState(() => sessionStorage.getItem(tabKey) || 'perfil');
+
+  const switchTab = (id) => { setActiveTab(id); sessionStorage.setItem(tabKey, id); };
   const [isDirty, setIsDirty]   = useState(false);
   const [saveStatus, setSaveStatus] = useState('idle');
 
@@ -151,7 +154,7 @@ export default function CharacterForm({ characterId, initialData, onSave, onClos
           <button
             key={t.id}
             className={`tab-btn ${activeTab === t.id ? 'active' : ''}`}
-            onClick={() => setActiveTab(t.id)}
+            onClick={() => switchTab(t.id)}
           >
             {t.label}
           </button>

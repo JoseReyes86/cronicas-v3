@@ -39,9 +39,9 @@ export const DEFAULT_CHARACTER = {
   },
 
   virtudes: {
-    autocontrol: { val: 0, blocked: 0, cd: '', costo: '' },
-    alerta:      { val: 0, blocked: 0, cd: '', costo: '' },
-    valentia:    { val: 0, blocked: 0, cd: '', costo: '' }
+    autocontrol: { val: 0, blocked: 0, habilidades: [] },
+    alerta:      { val: 0, blocked: 0, habilidades: [] },
+    valentia:    { val: 0, blocked: 0, habilidades: [] }
   },
 
   estados_vitales: {

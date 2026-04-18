@@ -20,7 +20,7 @@ const CELL_GAP  = 4;   // px — gap entre celdas
 
 export default function SquareStat({
   value = 0, max = 10, rows = 1, markers = [],
-  onChange, readOnly = false, scalar = false, minLevel = 0
+  onChange, readOnly = false, scalar = false, minLevel = 0, color
 }) {
   const [lastValue, setLastValue] = React.useState(value);
   const [changedIdx, setChangedIdx] = React.useState(null);
@@ -96,13 +96,18 @@ export default function SquareStat({
       const markerActive = hasMarker && (value & (1 << (10 + markerPos))) !== 0;
 
       let boxCls = 'square-stat__box';
-      if (isLocked) boxCls += ' square-stat__box--locked'; // Clases para CSS
+      if (isLocked) boxCls += ' square-stat__box--locked';
       else if (filled) boxCls += ' square-stat__box--filled';
       if (changedIdx === i) boxCls += ' just-changed';
 
+      const colorStyle = color && filled ? {
+        background: color,
+        borderColor: color,
+        boxShadow: `0 0 6px ${color}99`,
+      } : undefined;
+
       cells.push(
         <div key={i} className="square-stat__cell">
-          {/* Slot de marker */}
           {showMarkerRow && (
             <div className="square-stat__marker-slot">
               {hasMarker && (
@@ -121,7 +126,7 @@ export default function SquareStat({
             type="button"
             className={boxCls}
             onClick={() => toggleBit(i)}
-            style={isLocked ? { cursor: 'default' } : {}}
+            style={isLocked ? { cursor: 'default', ...colorStyle } : colorStyle}
           />
         </div>
       );

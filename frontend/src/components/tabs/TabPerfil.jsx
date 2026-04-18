@@ -331,7 +331,7 @@ export default function TabPerfil({ data, update }) {
             }}>
               <div className="field-group">
                 <label className="hud-label" style={{ fontSize: '0.5rem' }}>NOMBRE</label>
-                <input className="cyber-input cyber-input--sm" value={con.nombre}
+                <input className="cyber-input" value={con.nombre}
                   onChange={e => { const next = [...conexiones]; next[idx] = { ...next[idx], nombre: e.target.value }; update('conexiones', null, next); }} />
               </div>
               <div className="field-group">
@@ -355,7 +355,7 @@ export default function TabPerfil({ data, update }) {
               </div>
               <div className="field-group">
                 <label className="hud-label" style={{ fontSize: '0.5rem' }}>VÍNCULO</label>
-                <input className="cyber-input cyber-input--sm" value={con.tipo}
+                <input className="cyber-input" value={con.tipo}
                   onChange={e => { const next = [...conexiones]; next[idx] = { ...next[idx], tipo: e.target.value }; update('conexiones', null, next); }} />
               </div>
               <button className="dynamic-list__remove" style={{ paddingBottom: '8px' }}
@@ -375,7 +375,7 @@ export default function TabPerfil({ data, update }) {
           <thead>
             <tr>
               <th>NOMBRE</th>
-              <th style={{ width: '180px' }}>TIPO DE BIEN</th>
+              <th style={{ width: '180px' }}>CATEGORÍA</th>
               <th style={{ width: '130px' }}>INGRESO</th>
               <th style={{ width: '130px' }}>EGRESO</th>
               <th style={{ width: '32px' }}></th>
@@ -389,14 +389,8 @@ export default function TabPerfil({ data, update }) {
                     onChange={e => { const next = [...economia.registros]; next[idx] = { ...next[idx], descripcion: e.target.value }; update('economia', 'registros', next); }} />
                 </td>
                 <td>
-                  <select className="cyber-select" value={reg.tipo || ''}
-                    onChange={e => { const next = [...economia.registros]; next[idx] = { ...next[idx], tipo: e.target.value }; update('economia', 'registros', next); }}>
-                    <option value="">SELECCIONAR...</option>
-                    <option value="SUELDO">SUELDO</option>
-                    <option value="EFECTIVO">EFECTIVO</option>
-                    <option value="BIEN">BIEN</option>
-                    <option value="OTRO">OTRO</option>
-                  </select>
+                  <input className="cyber-input cyber-input--sm" value={reg.tipo || ''} placeholder="Categoría..."
+                    onChange={e => { const next = [...economia.registros]; next[idx] = { ...next[idx], tipo: e.target.value }; update('economia', 'registros', next); }} />
                 </td>
                 <td>
                   <input className="cyber-input cyber-input--sm" type="number" min="0" placeholder="0" value={reg.ingreso}
