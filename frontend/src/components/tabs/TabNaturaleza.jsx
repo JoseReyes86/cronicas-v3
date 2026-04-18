@@ -33,137 +33,97 @@ export default function TabNaturaleza({ data, update }) {
     <div className="form-section">
 
       {/* ── NATURALEZA ─────────────────────────────────────── */}
-      <div className="glass-panel" style={{ borderTop: '2px solid var(--neon-cyan)' }}>
-        <div className="hud-label" style={{ marginBottom: '2rem' }}>PULSIONES DE NATURALEZA</div>
-
-        <div className="form-grid--3" style={{ marginBottom: '2.5rem' }}>
-          {[['ESTADO INSTINTIVO', 'instinto'], ['SISTEMA LIBERTAD', 'libertad'], ['NÚCLEO HUMANISMO', 'humanismo']].map(([label, key]) => (
+      <div className="glass-panel" style={{ borderTop: '2px solid var(--neon-cyan)', padding: '2rem' }}>
+        <div className="form-grid--3" style={{ marginBottom: '3rem' }}>
+          {[['Instinto', 'instinto'], ['Libertad', 'libertad'], ['Humanismo', 'humanismo']].map(([label, key]) => (
             <div key={key} className="field-group" style={{ alignItems: 'center' }}>
-              <label className="hud-label" style={{ textAlign: 'center', fontSize: '0.6rem' }}>{label}</label>
+              <label className="hud-label" style={{ fontSize: '0.9rem', color: 'var(--text-primary)', marginBottom: '0.8rem', textAlign: 'center' }}>{label}</label>
               <SquareStat value={naturaleza[key]} max={5} rows={1}
                 onChange={v => update('naturaleza', key, v)} />
             </div>
           ))}
         </div>
 
-        <div className="hud-label" style={{ marginBottom: '1.2rem', opacity: 0.5 }}>BITÁCORA DE NATURALEZA</div>
-        <div className="form-section" style={{ gap: '0.8rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
           {naturaleza.notas.map((nota, idx) => (
-            <div key={idx} className="field-group">
-              <label className="hud-label" style={{ fontSize: '0.5rem' }}>LOG_0{idx + 1}</label>
-              <input className="cyber-input" value={nota}
-                placeholder="..."
+            <div key={idx} style={{ display: 'flex', gap: '0.8rem', alignItems: 'flex-start' }}>
+              <span className="font-mono" style={{ fontSize: '1rem', color: 'var(--text-primary)', paddingTop: '0.4rem' }}>{idx + 1}.</span>
+              <textarea 
+                className="cyber-input" 
+                rows={2} 
+                style={{ 
+                   flexGrow: 1, resize: 'none', background: 'transparent',
+                   border: 'none', borderBottom: '1px dashed var(--glass-border)',
+                   borderRadius: 0, padding: '0.5rem 0', boxShadow: 'none'
+                }}
+                value={nota}
+                placeholder=""
                 onChange={e => {
                   const next = [...naturaleza.notas]; next[idx] = e.target.value;
                   update('naturaleza', 'notas', next);
-                }} />
+                }} 
+              />
             </div>
           ))}
         </div>
       </div>
 
       {/* ── LA VERDAD ──────────────────────────────────────── */}
-      <div className="glass-panel" style={{ borderTop: '2px solid var(--neon-magenta)' }}>
-        <div className="hud-label" style={{ marginBottom: '2.5rem' }}>MAPEO DE LA VERDAD</div>
-
-        <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '4rem', alignItems: 'start' }}>
-          {/* Pirámide de nodos - Neural Style */}
-          <div style={{ 
-            display: 'flex', 
-            flexDirection: 'column', 
-            gap: '8px', 
-            alignItems: 'center', 
-            padding: '2rem',
-            background: 'rgba(255,255,255,0.01)',
-            border: '1px solid var(--glass-border)',
-            borderRadius: 'var(--radius-md)',
-            position: 'relative'
-          }}>
-            {/* Grid background effect */}
-            <div style={{ position: 'absolute', inset: 0, opacity: 0.03, pointerEvents: 'none', backgroundImage: 'radial-gradient(var(--neon-magenta) 0.5px, transparent 0.5px)', backgroundSize: '10px 10px' }} />
-            
-            {PYRAMID_ROWS.map((row, rowIdx) => (
-              <div key={rowIdx} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', color: 'var(--neon-magenta)', opacity: 0.4, width: '20px', textAlign: 'right' }}>
-                  {OMEGA_LABELS[rowIdx]}
-                </span>
-                <div style={{ display: 'flex', gap: '6px' }}>
-                  {row.map(n => (
-                    <button
-                      key={n}
-                      onClick={() => toggleNodo(n)}
-                      title={`Sector ${n}`}
-                      style={{
-                        width: '26px',
-                        height: '26px',
-                        border: `1px solid ${laVerdad.nodos[n] ? 'var(--neon-magenta)' : 'rgba(255,255,255,0.1)'}`,
-                        background: laVerdad.nodos[n] ? 'var(--neon-magenta)' : 'transparent',
-                        color: laVerdad.nodos[n] ? '#000' : 'var(--text-dim)',
-                        fontSize: '0.55rem',
-                        fontFamily: 'var(--font-mono)',
-                        fontWeight: 'bold',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s ease',
-                        padding: 0,
-                        clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)', // Hexagonal shape
-                        boxShadow: laVerdad.nodos[n] ? '0 0 10px var(--neon-magenta)' : 'none',
-                      }}
-                    >
-                      {n}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Banco de Verdades */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <div className="hud-label" style={{ marginBottom: '0.5rem', opacity: 0.6 }}>REGISTRO DE DATOS ADQUIRIDOS</div>
-            <div style={{ 
-              display: 'flex', 
-              flexDirection: 'column', 
-              gap: '1rem', 
-              maxHeight: '600px', 
-              overflowY: 'auto',
-              paddingRight: '1rem',
-              scrollbarWidth: 'thin',
-              scrollbarColor: 'var(--neon-magenta) transparent'
-            }}>
-              {Array.from({ length: 42 }, (_, i) => i + 1).map(n => {
-                const isActive = laVerdad.nodos[n];
-                return (
-                  <div key={n} style={{ transition: 'opacity 0.3s ease', opacity: isActive ? 1 : 0.3 }}>
-                    <div className="field-group">
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', marginBottom: '0.3rem' }}>
-                        <span style={{ 
-                          width: '8px', height: '8px', 
+      <div className="glass-panel" style={{ borderTop: '2px solid var(--neon-magenta)', marginTop: '2rem', padding: '2rem' }}>
+        <div className="section-header" style={{ fontSize: '1.2rem', textAlign: 'center', marginBottom: '2.5rem', color: 'var(--text-primary)', borderBottom: 'none' }}>
+          LA VERDAD
+        </div>
+        
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem', overflowX: 'auto', paddingBottom: '1rem' }}>
+           {PYRAMID_ROWS.map((row, rowIdx) => (
+             <div key={rowIdx} style={{ display: 'flex', alignItems: 'center', gap: '1rem', minWidth: '700px' }}>
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  {row.map(n => {
+                    const isActive = laVerdad.nodos[n];
+                    return (
+                      <button
+                        className="font-mono"
+                        key={n}
+                        onClick={() => toggleNodo(n)}
+                        style={{
+                          width: '32px', height: '32px', borderRadius: '50%',
+                          border: `1px solid ${isActive ? 'var(--neon-magenta)' : 'var(--text-primary)'}`,
                           background: isActive ? 'var(--neon-magenta)' : 'transparent',
-                          border: '1px solid var(--neon-magenta)',
-                          borderRadius: '1px'
-                        }} />
-                        <label className="hud-label" style={{ fontSize: '0.5rem', marginBottom: 0 }}>VERDAD_HEX_0{n}</label>
-                      </div>
-                      <textarea
-                        className="cyber-input"
-                        rows={2}
-                        readOnly={!isActive}
-                        style={{ 
-                          resize: 'none', 
-                          fontSize: '0.8rem',
-                          background: isActive ? 'rgba(255,0,85,0.02)' : 'transparent',
-                          borderColor: isActive ? 'var(--neon-magenta)' : 'var(--glass-border)'
-                        }}
-                        placeholder={isActive ? "Ingrese decodificación..." : "SECTOR_LOCKED"}
-                        value={laVerdad.verdades[n] || ''}
-                        onChange={e => updateVerdad(n, e.target.value)}
-                      />
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+                          color: isActive ? '#000' : 'var(--text-primary)',
+                          fontSize: '0.75rem', fontWeight: 'bold',
+                          cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          boxShadow: isActive ? '0 0 10px var(--neon-magenta)' : 'none',
+                          padding: 0, flexShrink: 0
+                        }}>
+                          {n}
+                      </button>
+                    )
+                  })}
+                </div>
+
+                <input
+                  className="cyber-input"
+                  style={{ 
+                    flexGrow: 1, background: 'transparent',
+                    borderTop: 'none', borderLeft: 'none', borderRight: 'none', 
+                    borderRadius: 0, borderBottom: '1px dashed var(--glass-border)', 
+                    boxShadow: 'none', padding: '0.3rem 0.5rem', minWidth: '100px',
+                    color: 'var(--text-primary)'
+                  }}
+                  value={laVerdad.verdades[rowIdx + 1] || ''}
+                  onChange={e => updateVerdad(rowIdx + 1, e.target.value)}
+                />
+
+                <div className="font-mono" style={{
+                  width: '32px', height: '32px', flexShrink: 0,
+                  border: '1px solid var(--text-primary)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: '0.8rem', fontWeight: 'bold', color: 'var(--text-primary)'
+                }}>
+                  {OMEGA_LABELS[rowIdx]}
+                </div>
+             </div>
+           ))}
         </div>
       </div>
 
