@@ -42,8 +42,8 @@ export default function TabEstado({ data, update }) {
     const removeHab = (i) => update('virtudes', key, { ...stat, habilidades: habs.filter((_, idx) => idx !== i) });
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
-        <div className="stat-row">
-          <span className="stat-row__label">{VIRT_LABELS[key]}</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+          <span className="stat-row__label" style={{ minWidth: '80px', width: 'auto' }}>{VIRT_LABELS[key]}</span>
           <StatDiamond
             value={stat.val} blockedBits={stat.blocked} max={5}
             onChange={v => update('virtudes', key, { ...stat, val: v })}
@@ -170,120 +170,91 @@ export default function TabEstado({ data, update }) {
       {/* ── RESISTENCIA & VIRTUDES ──────────────────────────── */}
       <div className="glass-panel" style={{ borderTop: '2px solid var(--neon-magenta)' }}>
         <div className="resist-body">
-          {/* Columna Principal: ESTADOS VITALES */}
-          <div className="resist-main" style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
-            <div className="hud-label">ESTADOS VITALES &amp; RESISTENCIA</div>
-            
-            <div className="stat-row" style={{ alignItems: 'flex-start' }}>
-              <span className="stat-row__label" style={{ paddingTop: '6px' }}>VIGOR</span>
+          
+          {/* Fila 0: Cabeceras */}
+          <div className="hud-label order-ev">ESTADOS VITALES &amp; RESISTENCIA</div>
+          <div className="hud-label order-virt">VIRTUDES</div>
+
+          {/* Fila 1: Vigor / Autocontrol */}
+          <div className="order-ev">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <span className="stat-row__label" style={{ minWidth: '80px' }}>VIGOR</span>
               <SquareStat value={ev.vigor} max={20} rows={2} markers={[1, 2, 3]}
                 scalar color="var(--neon-cyan)"
                 onChange={v => update('estados_vitales', 'vigor', v)} />
             </div>
+          </div>
+          <div className="order-virt">
+            {renderVirtud('autocontrol')}
+          </div>
 
-            <div className="stat-row" style={{ alignItems: 'flex-start' }}>
-              <span className="stat-row__label" style={{ paddingTop: '6px' }}>CONSTITUCIÓN</span>
+          {/* Fila 2: Constitución / Alerta */}
+          <div className="order-ev">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <span className="stat-row__label" style={{ minWidth: '80px' }}>CONSTITUCIÓN</span>
               <SquareStat value={ev.constitucion} max={10} rows={1} markers={[1, 2, 3]}
                 scalar color="var(--neon-cyan)"
                 onChange={v => update('estados_vitales', 'constitucion', v)} />
             </div>
+          </div>
+          <div className="order-virt">
+            {renderVirtud('alerta')}
+          </div>
 
+          {/* Fila 3: Cordura+Voluntad / Valentía */}
+          <div className="order-ev" style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
             <div>
               <div style={{ 
                 display: 'grid', 
-                gridTemplateColumns: 'minmax(80px, 120px) max-content 40px', 
+                gridTemplateColumns: 'minmax(80px, 80px) max-content 40px', 
                 columnGap: '1rem', 
-                rowGap: '2px', // Espacio mínimo entre marcadores y cuadros
-                alignItems: 'center' 
+                rowGap: '6px',
+                alignItems: 'end' 
               }}>
                 <label className="hud-label" style={{ color: 'var(--neon-cyan)', marginBottom: '1rem', gridColumn: 'span 3' }}>CORDURA</label>
 
                 {[1, 2, 3, 4].map(nv => (
                   <React.Fragment key={nv}>
-                    {/* FILA A: Marcadores (Solo si nv === 1) */}
-                    <div />
-                    <div style={{ paddingLeft: '2px', height: '26px', display: 'flex', alignItems: 'flex-start' }}>
-                      {nv === 1 && (
-                        <div style={{ 
-                          display: 'flex', 
-                          gap: '4px', 
-                          paddingLeft: '78px', 
-                          paddingTop: '2px'
-                        }}>
-                          {[0, 1, 2].map(mIdx => {
-                            const isActive = (ev.cordura.nv1 & (1 << (10 + mIdx))) !== 0;
-                            return (
-                              <button 
-                                key={mIdx} 
-                                type="button"
-                                onClick={() => {
-                                  const current = ev.cordura.nv1;
-                                  update('estados_vitales', 'cordura.nv1', current ^ (1 << (10 + mIdx)));
-                                }}
-                                className={`square-stat__marker ${isActive ? 'square-stat__marker--active' : ''}`} 
-                                style={{ width: '22px', height: '22px', fontSize: '0.6rem' }}
-                              >
-                                {mIdx + 1}
-                              </button>
-                            );
-                          })}
-                        </div>
-                      )}
-                    </div>
-                    <div />
-
-                    {/* FILA B: Datos principales (Etiqueta | Cuadros | Valor) */}
                     <span style={{ 
                       fontFamily: 'var(--font-mono)', 
                       fontSize: '0.75rem', 
                       color: 'var(--text-dim)', 
                       fontWeight: 600,
                       letterSpacing: '1px',
-                      height: '32px',
-                      display: 'flex',
-                      alignItems: 'center'
+                      paddingBottom: '3px'
                     }}>
                       NV 0{nv}
                     </span>
                     
-                    <div style={{ height: '32px', display: 'flex', alignItems: 'center' }}>
-                      <SquareStat
-                        value={ev.cordura[`nv${nv}`]} max={5} rows={1}
-                        onChange={v => update('estados_vitales', `cordura.nv${nv}`, v)}
-                      />
-                    </div>
+                    <SquareStat
+                      value={ev.cordura[`nv${nv}`]} max={5} rows={1}
+                      markers={nv === 1 ? [1, 2, 3] : []}
+                      onChange={v => update('estados_vitales', `cordura.nv${nv}`, v)}
+                    />
 
-                    <div style={{ height: '32px', display: 'flex', alignItems: 'center', paddingLeft: '0.5rem' }}>
-                      <span style={{ 
-                        fontFamily: 'var(--font-mono)', 
-                        fontSize: '0.9rem', 
-                        color: 'var(--neon-cyan)',
-                        fontWeight: 'bold'
-                      }}>
-                        {nv * 5}
-                      </span>
-                    </div>
-
-                    {/* Espacio entre niveles */}
-                    <div style={{ height: '8px', gridColumn: 'span 3' }} />
+                    <span style={{ 
+                      fontFamily: 'var(--font-mono)', 
+                      fontSize: '0.9rem', 
+                      color: 'var(--neon-cyan)',
+                      fontWeight: 'bold',
+                      paddingBottom: '3px'
+                    }}>
+                      {nv * 5}
+                    </span>
                   </React.Fragment>
                 ))}
               </div>
             </div>
 
-            <div className="stat-row" style={{ paddingTop: '1rem', borderTop: '1px solid var(--glass-border)' }}>
-              <span className="stat-row__label">VOLUNTAD</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', paddingTop: '1.5rem', borderTop: '1px solid var(--glass-border)' }}>
+              <span className="stat-row__label" style={{ minWidth: '80px' }}>VOLUNTAD</span>
               <SquareStat value={ev.voluntad} max={10} rows={1}
                 scalar color="var(--neon-cyan)"
                 onChange={v => update('estados_vitales', 'voluntad', v)} />
             </div>
           </div>
-
-          {/* Columna Lateral: VIRTUDES */}
-          <div className="resist-side" style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
-            <div className="hud-label">VIRTUDES</div>
-            {renderVirtud('autocontrol')}
-            {renderVirtud('alerta')}
+          
+          <div className="order-virt">
             {renderVirtud('valentia')}
           </div>
 

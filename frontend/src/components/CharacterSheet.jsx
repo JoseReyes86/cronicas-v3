@@ -175,7 +175,7 @@ export default function CharacterSheet({ characterData, onEdit, onBack }) {
           {/* EVALUACIÓN: ATRIBUTOS + DONES */}
           <div className="glass-panel glass-panel--top-cyan">
             <div className="section-header section-header--cyan" style={{ textAlign: 'center' }}>EVALUACIÓN DEL SUJETO</div>
-            <div style={{ display: 'flex', gap: '2rem' }}>
+            <div className="form-grid--2" style={{ maxWidth: '700px', margin: '0 auto', gap: '2rem' }}>
               <div style={{ flex: 1 }}>
                 <div className="hud-label hud-label--cyan" style={{ marginBottom: '0.8rem' }}>ATRIBUTOS</div>
                 {Object.entries(d.atributos || {}).map(([k, s]) => (
@@ -185,7 +185,6 @@ export default function CharacterSheet({ characterData, onEdit, onBack }) {
                   </div>
                 ))}
               </div>
-              <div style={{ width: '1px', background: 'var(--glass-border)' }} />
               <div style={{ flex: 1 }}>
                 <div className="hud-label hud-label--magenta" style={{ marginBottom: '0.8rem' }}>DONES</div>
                 {Object.entries(d.dones || {}).map(([k, s]) => (
@@ -200,9 +199,9 @@ export default function CharacterSheet({ characterData, onEdit, onBack }) {
 
           {/* RESISTENCIA */}
           <div className="glass-panel glass-panel--top-magenta">
-            <div className="section-header section-header--magenta">RESISTENCIA</div>
-            <div className="resist-body">
-              <div className="resist-main">
+            <div className="section-header section-header--magenta" style={{ textAlign: 'center' }}>RESISTENCIA</div>
+            <div className="form-grid--2" style={{ maxWidth: '700px', margin: '0 auto', gap: '2rem' }}>
+              <div style={{ flex: 1 }}>
                 {/* Vigor */}
                 <div style={{ marginBottom: '1.5rem' }}>
                   <div className="hud-label" style={{ marginBottom: '4px', paddingLeft: '40px' }}>VIGOR</div>
@@ -232,8 +231,8 @@ export default function CharacterSheet({ characterData, onEdit, onBack }) {
               </div>
 
               {/* Virtudes + Voluntad */}
-              <div className="resist-side">
-                <div className="glass-panel glass-panel--top-cyan" style={{ marginBottom: '1rem' }}>
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                <div className="glass-panel glass-panel--top-cyan" style={{ marginBottom: '0' }}>
                   <div className="hud-label hud-label--cyan" style={{ marginBottom: '0.8rem' }}>[ VIRTUDES ]</div>
                   {Object.entries(d.virtudes || {}).map(([k, s]) => (
                     <div key={k} className="stat-row" style={{ marginBottom: '0.5rem' }}>
@@ -251,7 +250,7 @@ export default function CharacterSheet({ characterData, onEdit, onBack }) {
           </div>
 
           {/* MANIPULACIONES + RASGOS */}
-          <div className="sheet-3col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1.5rem' }}>
+          <div className="form-grid--3" style={{ gap: '1.5rem' }}>
             <div className="glass-panel glass-panel--top-magenta">
               <div className="hud-label hud-label--magenta" style={{ marginBottom: '0.8rem' }}>[ CLAN ]</div>
               {Object.entries(d.manipulaciones?.clanes || {})

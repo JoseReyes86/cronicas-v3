@@ -36,8 +36,8 @@ export default function TabNaturaleza({ data, update }) {
       <div className="glass-panel" style={{ borderTop: '2px solid var(--neon-cyan)', padding: '2rem' }}>
         <div className="form-grid--3" style={{ marginBottom: '3rem' }}>
           {[['Instinto', 'instinto'], ['Libertad', 'libertad'], ['Humanismo', 'humanismo']].map(([label, key]) => (
-            <div key={key} className="field-group" style={{ alignItems: 'center' }}>
-              <label className="hud-label" style={{ fontSize: '0.9rem', color: 'var(--text-primary)', marginBottom: '0.8rem', textAlign: 'center' }}>{label}</label>
+            <div key={key} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', width: '100%' }}>
+              <label className="hud-label" style={{ fontSize: '0.9rem', color: 'var(--text-primary)', marginBottom: 0, textAlign: 'center' }}>{label.toUpperCase()}</label>
               <SquareStat value={naturaleza[key]} max={5} rows={1}
                 onChange={v => update('naturaleza', key, v)} />
             </div>
@@ -52,16 +52,18 @@ export default function TabNaturaleza({ data, update }) {
                 className="cyber-input" 
                 rows={2} 
                 style={{ 
-                   flexGrow: 1, resize: 'none', background: 'transparent',
-                   border: 'none', borderBottom: '1px dashed var(--glass-border)',
-                   borderRadius: 0, padding: '0.5rem 0', boxShadow: 'none'
+                   flexGrow: 1, resize: 'none', overflow: 'hidden'
                 }}
                 value={nota}
                 placeholder=""
                 onChange={e => {
                   const next = [...naturaleza.notas]; next[idx] = e.target.value;
                   update('naturaleza', 'notas', next);
-                }} 
+                }}
+                onInput={(e) => {
+                  e.target.style.height = 'auto';
+                  e.target.style.height = e.target.scrollHeight + 'px';
+                }}
               />
             </div>
           ))}
@@ -101,24 +103,14 @@ export default function TabNaturaleza({ data, update }) {
                   })}
                 </div>
 
-                <input
-                  className="cyber-input"
-                  style={{ 
-                    flexGrow: 1, background: 'transparent',
-                    borderTop: 'none', borderLeft: 'none', borderRight: 'none', 
-                    borderRadius: 0, borderBottom: '1px dashed var(--glass-border)', 
-                    boxShadow: 'none', padding: '0.3rem 0.5rem', minWidth: '100px',
-                    color: 'var(--text-primary)'
-                  }}
-                  value={laVerdad.verdades[rowIdx + 1] || ''}
-                  onChange={e => updateVerdad(rowIdx + 1, e.target.value)}
-                />
+                {/* TEXTAREA REMOVIDO POR PETICIÓN DEL USUARIO */}
 
                 <div className="font-mono" style={{
                   width: '32px', height: '32px', flexShrink: 0,
                   border: '1px solid var(--text-primary)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: '0.8rem', fontWeight: 'bold', color: 'var(--text-primary)'
+                  fontSize: '0.8rem', fontWeight: 'bold', color: 'var(--text-primary)',
+                  marginLeft: 'auto'
                 }}>
                   {OMEGA_LABELS[rowIdx]}
                 </div>

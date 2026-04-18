@@ -157,7 +157,11 @@ function App() {
         characterId={selectedId}
         initialData={char?.data || null}
         onSave={handleSave}
-        onClose={() => { navigate('list', null); fetchCharacters(); }}
+        onClose={() => {
+          if (selectedId) navigate('view', selectedId);
+          else navigate('list', null);
+          fetchCharacters();
+        }}
       />
     );
   }

@@ -259,9 +259,26 @@
 }
 
 /* Contenedores de resistencia (para control responsive) */
-.resist-body { display: flex; gap: 2rem; }
-.resist-side { width: 200px; flex-shrink: 0; }
-.resist-main { flex: 1; min-width: 0; }
+.resist-body { 
+  display: grid; 
+  grid-template-columns: 1fr 1fr; 
+  gap: 3rem 4rem; 
+  align-items: start; 
+}
+.resist-side, .resist-main { display: contents; } /* Eliminamos la encapsulación restrictiva para que el grid alinee hijos directos */
+
+@media (max-width: 768px) {
+  .resist-body {
+    display: flex !important;
+    flex-direction: column;
+    gap: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .order-ev { order: 1; }
+  .order-virt { order: 2; }
+}
 
 /* ══════════════════════════════════════════════════════════════
    RESPONSIVE — Tablet (≤ 768px)
